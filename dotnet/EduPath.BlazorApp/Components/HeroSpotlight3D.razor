@@ -1,0 +1,178 @@
+@using EduPath.BlazorApp.Models
+@using EduPath.BlazorApp.Services
+@inject ICourseService CourseService
+@inject IJSRuntime JS
+@implements IAsyncDisposable
+
+<section class="spotlight-section">
+    <!-- Ambient Background Glows -->
+    <div class="ambient-glow"></div>
+
+    <div class="spotlight-container">
+        <!-- Header -->
+        <div class="spotlight-header">
+            <div class="badge-pill">
+                <span class="pulse-dot"></span>
+                <span>THE SPOTLIGHT COLLECTION • VOL. 01</span>
+            </div>
+            
+            <h1 class="spotlight-title">
+                Selected courses, <span class="gradient-text">framed in 3D light</span>
+            </h1>
+            
+            <p class="spotlight-subtitle">
+                360° সার্কেলে ঘুরিয়ে পছন্দের কোর্স দেখুন। প্রতিটি কার্ডে ক্লিক করে ডিটেইলস এক্সপ্লোর করুন।
+            </p>
+
+            <div class="controls-row">
+                <button class="btn btn-primary" @onclick="OnExploreClicked">
+                    Explore Courses &rarr;
+                </button>
+                <button class="btn btn-secondary" @onclick="ToggleAutoRotate">
+                    @(isAutoRotate ? "⏸️ রোটেশন পজ" : "▶️ অটো রোটেশন")
+                </button>
+            </div>
+        </div>
+
+        <!-- 3D Cylindrical Stage -->
+        <div class="carousel-viewport" @onmouseenter="PauseRotation" @onmouseleave="ResumeRotation">
+            <div class="carousel-cylinder" style="transform: rotateY(@(rotationAngle)deg);">
+                @if (items != null)
+                {
+                    @for (int i = 0; i < items.Count; i++)
+                    {
+                        var item = items[i];
+                        var cardAngle = i * (360.0 / items.Count);
+                        var relativeAngle = ((cardAngle + rotationAngle) % 360 + 360) % 360;
+                        var angleFromFront = relativeAngle > 180 ? relativeAngle - 360 : relativeAngle;
+                        var isFront = Math.Abs(angleFromFront) < 30;
+
+                        <div class="carousel-card @(isFront ? "card-front" : "card-back")"
+                             style="transform: rotateY(@(cardAngle)deg) translateZ(@(cylinderRadius)px);"
+                             @onclick="() => HandleCardClick(item, cardAngle, isFront)">
+                            
+                            <img src="@item.Image" alt="@item.Name" class="card-img" />
+                            <div class="card-gradient"></div>
+                            <div class="card-border"></div>
+
+                            <div class="card-code">@item.Code</div>
+                            
+                            @if (isFront)
+                            {
+                                <div class="card-badge">@item.BadgeText</div>
+                            }
+
+                            <div class="card-footer">
+                                <div class="card-category">@item.Category</div>
+                                <h3 class="card-name">@item.Name</h3>
+                                @if (isFront)
+                                {
+                                    <p class="card-desc">@item.Subtitle</p>
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- Carousel Navigation Controls -->
+        <div class="carousel-controls">
+            <button class="nav-btn" @onclick="PrevSlide" aria-label="Previous">&larr;</button>
+            <div class="indicator-pill">
+                <span>@(activeItem?.Code ?? "01")</span>
+                <span>/</span>
+                <span>@(activeItem?.Name ?? "")</span>
+            </div>
+            <button class="nav-btn" @onclick="NextSlide" aria-label="Next">&rarr;</button>
+        </div>
+    </div>
+</section>
+
+@code {
+    [Parameter] public EventCallback OnExploreCourses { get; set; }
+    [Parameter] public EventCallback<SpotlightItem> OnSelectSpotlight { get; set; }
+
+    private List<SpotlightItem>? items;
+    private double rotationAngle = 0;
+    private bool isAutoRotate = true;
+    private bool isHovered = false;
+    private double cylinderRadius = 400;
+    private System.Timers.Timer? rotationTimer;
+
+    private SpotlightItem? activeItem
+    {
+        get
+        {
+            if (items == null || items.Count == 0) return null;
+            var count = items.Count;
+            var angleStep = 360.0 / count;
+            var normalized = ((-rotationAngle % 360) + 360) % 360;
+            var idx = (int)Math.Round(normalized / angleStep) % count;
+            return items[idx];
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        items = await CourseService.GetSpotlightItemsAsync();
+
+        // 60 FPS smooth rotation timer in .NET Blazor
+        rotationTimer = new System.Timers.Timer(25);
+        rotationTimer.Elapsed += (s, e) =>
+        {
+            if (isAutoRotate && !isHovered)
+            {
+                rotationAngle -= 0.35;
+                InvokeAsync(StateHasChanged);
+            }
+        };
+        rotationTimer.Start();
+    }
+
+    private void ToggleAutoRotate() => isAutoRotate = !isAutoRotate;
+    private void PauseRotation() => isHovered = true;
+    private void ResumeRotation() => isHovered = false;
+
+    private void PrevSlide()
+    {
+        if (items == null) return;
+        var step = 360.0 / items.Count;
+        rotationAngle = Math.Round(rotationAngle / step) * step + step;
+    }
+
+    private void NextSlide()
+    {
+        if (items == null) return;
+        var step = 360.0 / items.Count;
+        rotationAngle = Math.Round(rotationAngle / step) * step - step;
+    }
+
+    private async Task HandleCardClick(SpotlightItem item, double cardAngle, bool isFront)
+    {
+        if (!isFront)
+        {
+            var currentNorm = ((-rotationAngle % 360) + 360) % 360;
+            var diff = cardAngle - currentNorm;
+            if (diff > 180) diff -= 360;
+            if (diff < -180) diff += 360;
+            rotationAngle -= diff;
+        }
+        else
+        {
+            await OnSelectSpotlight.InvokeAsync(item);
+        }
+    }
+
+    private async Task OnExploreClicked()
+    {
+        await OnExploreCourses.InvokeAsync();
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        rotationTimer?.Stop();
+        rotationTimer?.Dispose();
+        return ValueTask.CompletedTask;
+    }
+}

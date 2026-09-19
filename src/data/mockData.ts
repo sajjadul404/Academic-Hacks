@@ -330,7 +330,7 @@ export const COURSES: Course[] = [
     rating: 4.92,
     enrolledStudents: 45000,
     mentors: [
-      { name: 'EduPath মেন্টর টিম', title: 'Top Educators of Bangladesh', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' }
+      { name: 'Academic Hacks মেন্টর টিম', title: 'Top Educators of Bangladesh', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' }
     ],
     description: 'আমাদের প্ল্যাটফর্মের ক্লাস কোয়ালিটি এবং টিচারদের পড়ানোর ধরণ যাচাই করার জন্য এই সম্পূর্ণ ফ্রি কোর্সটিতে এখনই যুক্ত হন।',
     features: [
@@ -350,7 +350,7 @@ export const TESTIMONIALS: Testimonial[] = [
     exam: 'BUET Admission 2025',
     rank: 'Merit Position: 14th',
     institution: 'BUET CSE Dept.',
-    comment: 'EduPath-এর লাইভ ডাউট সলভ এবং ফিজিক্সের অ্যানিমেশন ক্লাসগুলো আমার ধারণাকে ক্রিস্টাল ক্লিয়ার করেছিল। প্রশ্নব্যাংকের প্রতিটি ম্যাথ হাতে কলমে করানোয় বুয়েট এক্সামে আত্মবিশ্বাস ছিল অনন্য!',
+    comment: 'Academic Hacks-এর লাইভ ডাউট সলভ এবং ফিজিক্সের অ্যানিমেশন ক্লাসগুলো আমার ধারণাকে ক্রিস্টাল ক্লিয়ার করেছিল। প্রশ্নব্যাংকের প্রতিটি ম্যাথ হাতে কলমে করানোয় বুয়েট এক্সামে আত্মবিশ্বাস ছিল অনন্য!',
     avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=200&q=80'
   },
   {

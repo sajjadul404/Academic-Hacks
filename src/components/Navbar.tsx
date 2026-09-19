@@ -67,7 +67,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5">
                 <span className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-800 bg-clip-text text-transparent font-['Outfit',sans-serif]">
-                  EduPath
+                  Academic Hacks
                 </span>
                 <span className="px-1.5 py-0.5 text-[10px] font-bold bg-indigo-100 text-indigo-700 rounded-md">
                   LIVE

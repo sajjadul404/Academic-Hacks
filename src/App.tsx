@@ -204,7 +204,7 @@ export default function App() {
         {/* 5. Why Choose Us / Online Learning Benefits Section */}
         <WhyUsSection />
 
-        {/* 6. EduPath Unique Features & Student Benefits Section */}
+        {/* 6. Academic Hacks Unique Features & Student Benefits Section */}
         <BenefitsSection />
 
         {/* 7. Student Success Testimonials */}

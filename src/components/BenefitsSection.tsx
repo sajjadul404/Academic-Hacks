@@ -103,7 +103,7 @@ export const BenefitsSection: React.FC = () => {
               <div className="relative z-10 w-64 sm:w-72 aspect-square rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-900">
                 <img
                   src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=700&q=80"
-                  alt="Student studying with EduPath"
+                  alt="Student studying with Academic Hacks"
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover object-center"
                 />

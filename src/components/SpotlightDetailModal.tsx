@@ -86,7 +86,7 @@ export const SpotlightDetailModal: React.FC<SpotlightDetailModalProps> = ({
         {/* Footer */}
         <div className="p-5 border-t border-slate-800 bg-slate-950 flex items-center justify-between">
           <span className="text-xs text-slate-400">
-            EduPath Spotlight 2026
+            Academic Hacks Spotlight 2026
           </span>
           <button
             onClick={() => {

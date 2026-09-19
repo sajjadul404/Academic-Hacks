@@ -115,7 +115,7 @@ export const HeroSpotlight: React.FC<HeroSpotlightProps> = ({
           {/* Subtle volume tag with horizontal lines */}
           <div className="flex items-center justify-center gap-3 mb-4 text-[10px] sm:text-[11px] font-semibold tracking-[0.2em] text-slate-400 uppercase font-mono">
             <span className="w-8 h-[1px] bg-slate-300/80" />
-            <span>এডুপ্যাথ স্পটলাইট • প্রিমিয়াম এডমিশন ২০২৬</span>
+            <span>একাডেমিক হ্যাকস স্পটলাইট • প্রিমিয়াম এডমিশন ২০২৬</span>
             <span className="w-8 h-[1px] bg-slate-300/80" />
           </div>
 

@@ -24,9 +24,9 @@ export const DotnetArchitectureModal: React.FC<DotnetArchitectureModalProps> = (
   const csharpController = `// Controllers/CoursesController.cs
 using Microsoft.AspNetCore.Mvc;
 using Supabase;
-using EduPath.Models;
+using AcademicHacks.Models;
 
-namespace EduPath.Controllers
+namespace AcademicHacks.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -86,7 +86,7 @@ namespace EduPath.Controllers
     }
 }`;
 
-  const supabaseSql = `-- Supabase PostgreSQL Schema for EduPath
+  const supabaseSql = `-- Supabase PostgreSQL Schema for Academic Hacks
 -- Run this in your Supabase SQL Editor:
 
 CREATE TABLE public.courses (
@@ -130,7 +130,7 @@ CREATE POLICY "Allow users to insert enrollments" ON public.enrollments FOR INSE
 using Postgrest.Attributes;
 using Postgrest.Models;
 
-namespace EduPath.Models
+namespace AcademicHacks.Models
 {
     [Table("courses")]
     public class CourseModel : BaseModel
@@ -203,7 +203,7 @@ builder.Services.AddScoped(_ =>
 // Enable CORS for React Frontend
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowEduPathFrontend", policy =>
+    options.AddPolicy("AllowAcademicHacksFrontend", policy =>
     {
         policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
     });
@@ -211,7 +211,7 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-app.UseCors("AllowEduPathFrontend");
+app.UseCors("AllowAcademicHacksFrontend");
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHttpsRedirection();

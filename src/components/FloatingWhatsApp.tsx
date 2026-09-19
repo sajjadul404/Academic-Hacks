@@ -14,7 +14,7 @@ export const FloatingWhatsApp: React.FC = () => {
   const handleSend = (textToSend?: string) => {
     const text = textToSend || message;
     if (!text.trim()) return;
-    const encoded = encodeURIComponent(`EduPath Support: ${text}`);
+    const encoded = encodeURIComponent(`Academic Hacks Support: ${text}`);
     window.open(`https://wa.me/8801700000000?text=${encoded}`, '_blank');
     setMessage('');
     setIsOpen(false);
@@ -32,7 +32,7 @@ export const FloatingWhatsApp: React.FC = () => {
                 💬
               </div>
               <div>
-                <h4 className="font-bold text-sm">EduPath WhatsApp হেল্পলাইন</h4>
+                <h4 className="font-bold text-sm">Academic Hacks WhatsApp হেল্পলাইন</h4>
                 <p className="text-[11px] text-emerald-100 flex items-center gap-1">
                   <span className="w-2 h-2 rounded-full bg-emerald-300 animate-pulse" />
                   <span>অনলাইনে সক্রিয় আছেন</span>
@@ -50,7 +50,7 @@ export const FloatingWhatsApp: React.FC = () => {
           {/* Chat snippet */}
           <div className="p-4 bg-slate-50 space-y-2.5 text-xs text-slate-700">
             <div className="bg-white p-3 rounded-2xl shadow-sm border border-slate-100 max-w-[90%]">
-              <p>আসসালামু আলাইকুম! EduPath-এ আপনাকে স্বাগতম। কীভাবে সাহায্য করতে পারি?</p>
+              <p>আসসালামু আলাইকুম! Academic Hacks-এ আপনাকে স্বাগতম। কীভাবে সাহায্য করতে পারি?</p>
               <span className="text-[10px] text-slate-400 mt-1 block text-right">এখন</span>
             </div>
 

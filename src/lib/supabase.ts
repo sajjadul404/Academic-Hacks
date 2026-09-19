@@ -18,7 +18,7 @@ export const supabase = isSupabaseConfigured
 export const localStore = {
   getCart: () => {
     try {
-      const data = localStorage.getItem('edupath_cart');
+      const data = localStorage.getItem('academichacks_cart') || localStorage.getItem('edupath_cart');
       return data ? JSON.parse(data) : [];
     } catch {
       return [];
@@ -26,14 +26,14 @@ export const localStore = {
   },
   saveCart: (cart: unknown) => {
     try {
-      localStorage.setItem('edupath_cart', JSON.stringify(cart));
+      localStorage.setItem('academichacks_cart', JSON.stringify(cart));
     } catch (e) {
       console.error(e);
     }
   },
   getUser: () => {
     try {
-      const data = localStorage.getItem('edupath_user');
+      const data = localStorage.getItem('academichacks_user') || localStorage.getItem('edupath_user');
       return data ? JSON.parse(data) : null;
     } catch {
       return null;
@@ -42,8 +42,9 @@ export const localStore = {
   saveUser: (user: unknown) => {
     try {
       if (user) {
-        localStorage.setItem('edupath_user', JSON.stringify(user));
+        localStorage.setItem('academichacks_user', JSON.stringify(user));
       } else {
+        localStorage.removeItem('academichacks_user');
         localStorage.removeItem('edupath_user');
       }
     } catch (e) {

@@ -98,7 +98,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               </div>
               <div>
                 <h3 className="font-bold text-slate-900 text-lg">আপনার কার্ট ({cart.length})</h3>
-                <p className="text-xs text-slate-500">EduPath অনলাইন লার্নিং</p>
+                <p className="text-xs text-slate-500">Academic Hacks অনলাইন লার্নিং</p>
               </div>
             </div>
 

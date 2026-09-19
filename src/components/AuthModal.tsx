@@ -78,7 +78,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         const dummyUser: User = {
           id: 'user_' + Date.now(),
           name: mode === 'register' ? (name || 'শিক্ষার্থী') : (email.split('@')[0] || 'তানভীর হাসান'),
-          email: email || 'student@edupath.bd',
+          email: email || 'student@academichacks.bd',
           phone: phone || '01700000000',
           enrolledCourses: []
         };
@@ -114,7 +114,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <UserIcon className="w-6 h-6" />
           </div>
           <h3 className="text-2xl font-extrabold text-slate-900 font-['Outfit',sans-serif]">
-            {mode === 'login' ? 'EduPath-এ লগইন করুন' : 'নতুন অ্যাকাউন্ট তৈরি করুন'}
+            {mode === 'login' ? 'Academic Hacks-এ লগইন করুন' : 'নতুন অ্যাকাউন্ট তৈরি করুন'}
           </h3>
           <p className="text-xs text-slate-500 mt-1">
             {mode === 'login' ? 'আপনার অ্যাকাউন্টে লগইন করে ক্লাসে যুক্ত হন' : 'আজই রেজিস্ট্রেশন করে ফ্রি ক্লাস ও স্পেশাল অফার উপভোগ করুন'}

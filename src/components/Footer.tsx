@@ -32,7 +32,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateSection }) => {
               </div>
               <div className="flex flex-col">
                 <span className="text-xl font-extrabold bg-gradient-to-r from-blue-700 to-purple-800 bg-clip-text text-transparent font-['Outfit',sans-serif]">
-                  EduPath
+                  Academic Hacks
                 </span>
                 <span className="text-[11px] text-slate-500 font-medium font-['Hind_Siliguri',sans-serif]">
                   শিক্ষার সহজ পথ
@@ -41,7 +41,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateSection }) => {
             </div>
 
             <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-sm mb-6">
-              শিক্ষার সহজ পথ, সাফল্যের নতুন দিগন্ত। মানসম্মত অনলাইন শিক্ষা সবার জন্য সহজ ও accessible করাই EduPath-এর মূল লক্ষ্য।
+              শিক্ষার সহজ পথ, সাফল্যের নতুন দিগন্ত। মানসম্মত অনলাইন শিক্ষা সবার জন্য সহজ ও accessible করাই Academic Hacks-এর মূল লক্ষ্য।
             </p>
 
             <div className="space-y-2 text-xs text-slate-600">
@@ -51,7 +51,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateSection }) => {
               </p>
               <p className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-indigo-600" />
-                <span>support@edupath.edu.bd</span>
+                <span>support@academichacks.edu.bd</span>
               </p>
               <p className="flex items-center gap-2">
                 <MapPin className="w-3.5 h-3.5 text-indigo-600" />
@@ -134,7 +134,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateSection }) => {
         {/* Bottom Bar matching screenshot */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
           
-          <p>© 2026 <span className="font-bold text-indigo-700">EduPath</span>. All Rights Reserved.</p>
+          <p>© 2026 <span className="font-bold text-indigo-700">Academic Hacks</span>. All Rights Reserved.</p>
 
           <div className="flex items-center gap-4">
             <span className="font-semibold text-slate-700">আমাদের সাথে যুক্ত থাকুন |</span>

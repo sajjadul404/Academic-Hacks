@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { ChevronLeft, ChevronRight, Sparkles, BookOpen } from 'lucide-react';
+import { ChevronLeft, ChevronRight, BookOpen } from 'lucide-react';
 import { SPOTLIGHT_ITEMS } from '../data/mockData';
 
 export const HeroSpotlight = ({
@@ -125,16 +125,6 @@ export const HeroSpotlight = ({
         
         {/* Top Header & Tagline */}
         <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-indigo-100/90 shadow-sm mb-4">
-            <span className="flex h-2 w-2 rounded-full bg-indigo-600 animate-pulse" />
-            <span className="text-xs font-bold bg-gradient-to-r from-indigo-700 to-purple-700 bg-clip-text text-transparent font-['Outfit',sans-serif]">
-              একাডেমিক হ্যাকস স্পটলাইট • প্রিমিয়াম এডমিশন ২০২৬
-            </span>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">
-              নতুন ব্যাচ
-            </span>
-          </div>
-
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.15] font-['Outfit',sans-serif]">
             স্বপ্ন জয়ের শুরু <br className="hidden sm:inline" />
             <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
@@ -154,13 +144,6 @@ export const HeroSpotlight = ({
             >
               <BookOpen className="w-4 h-4" />
               <span>সকল কোর্স দেখুন</span>
-            </button>
-            <button
-              onClick={() => onSelectSpotlight(currentItem)}
-              className="px-6 py-3 rounded-full text-sm font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 shadow-sm hover:border-indigo-300 transition-all cursor-pointer flex items-center gap-2"
-            >
-              <Sparkles className="w-4 h-4 text-indigo-600" />
-              <span>{currentItem.name} ব্যাচ প্রিভিউ</span>
             </button>
           </div>
         </div>

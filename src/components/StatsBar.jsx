@@ -1,7 +1,7 @@
 import React from 'react';
 import { TrendingUp, Users, Award, BookOpenCheck } from 'lucide-react';
 
-export const StatsBar: React.FC = () => {
+export const StatsBar = () => {
   const stats = [
     {
       id: 'stat-courses',

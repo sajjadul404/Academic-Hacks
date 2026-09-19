@@ -1,6 +1,6 @@
 {
-  "name": "EduPath",
-  "description": "EduPath - শিক্ষার সহজ পথ: বাংলাদেশের সেরা অনলাইন লার্নিং ও অ্যাডমিশন প্রস্তুতি প্ল্যাটফর্ম",
+  "name": "Academic Hacks",
+  "description": "Academic Hacks - শিক্ষার সহজ পথ: বাংলাদেশের সেরা অনলাইন লার্নিং ও অ্যাডমিশন প্রস্তুতি প্ল্যাটফর্ম",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

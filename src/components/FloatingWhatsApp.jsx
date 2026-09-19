@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { MessageCircle, X, Send, PhoneCall, ShieldCheck } from 'lucide-react';
+import { MessageCircle, X, Send } from 'lucide-react';
 
-export const FloatingWhatsApp: React.FC = () => {
+export const FloatingWhatsApp = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState('');
 
@@ -11,7 +11,7 @@ export const FloatingWhatsApp: React.FC = () => {
     'লাইভ ক্লাসের রুটিন জানতে চাই'
   ];
 
-  const handleSend = (textToSend?: string) => {
+  const handleSend = (textToSend) => {
     const text = textToSend || message;
     if (!text.trim()) return;
     const encoded = encodeURIComponent(`Academic Hacks Support: ${text}`);
@@ -89,7 +89,7 @@ export const FloatingWhatsApp: React.FC = () => {
         </div>
       )}
 
-      {/* Floating Trigger Button matching screenshot */}
+      {/* Floating Trigger Button */}
       <button
         id="floating-whatsapp-btn"
         onClick={() => setIsOpen(!isOpen)}

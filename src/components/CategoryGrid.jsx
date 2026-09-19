@@ -9,18 +9,12 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { CATEGORIES } from '../data/mockData';
-import { CategoryItem } from '../types';
 
-interface CategoryGridProps {
-  onSelectCategory: (categoryId: string, name: string) => void;
-  selectedCategory: string;
-}
-
-export const CategoryGrid: React.FC<CategoryGridProps> = ({
+export const CategoryGrid = ({
   onSelectCategory,
-  selectedCategory
+  selectedCategory = 'All'
 }) => {
-  const getIcon = (iconName: string) => {
+  const getIcon = (iconName) => {
     switch (iconName) {
       case 'School':
         return <School className="w-7 h-7" />;
@@ -58,7 +52,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({
           </p>
         </div>
 
-        {/* Categories Grid (2 rows of 3 columns matching screenshot) */}
+        {/* Categories Grid (2 rows of 3 columns) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {CATEGORIES.map((cat) => {
             const isSelected = selectedCategory === cat.name;

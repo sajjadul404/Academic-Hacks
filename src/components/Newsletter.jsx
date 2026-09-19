@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { Send, CheckCircle, Sparkles, Mail } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
-export const Newsletter: React.FC = () => {
+export const Newsletter = () => {
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = (e) => {
     e.preventDefault();
     if (!email || !email.includes('@')) return;
 
@@ -29,7 +29,7 @@ export const Newsletter: React.FC = () => {
     <section className="py-12 bg-[#F4F7FC]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Newsletter Banner Container matching screenshot */}
+        {/* Newsletter Banner Container */}
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-50/90 via-indigo-50/90 to-purple-50/90 border border-indigo-100/80 p-6 sm:p-8 lg:p-10 shadow-sm">
           
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 lg:gap-12">

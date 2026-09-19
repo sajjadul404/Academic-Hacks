@@ -1,18 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { Search, X, BookOpen, ArrowRight, Video, FileText, Sparkles } from 'lucide-react';
-import { Course } from '../types';
+import { Search, X, BookOpen, ArrowRight } from 'lucide-react';
 
-interface SearchModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  courses: Course[];
-  onSelectCourse: (course: Course) => void;
-}
-
-export const SearchModal: React.FC<SearchModalProps> = ({
-  isOpen,
+export const SearchModal = ({
+  isOpen = false,
   onClose,
-  courses,
+  courses = [],
   onSelectCourse
 }) => {
   const [query, setQuery] = useState('');
@@ -25,7 +17,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
       c.category.toLowerCase().includes(q) ||
       (c.subtitle && c.subtitle.toLowerCase().includes(q)) ||
       (c.badge && c.badge.toLowerCase().includes(q)) ||
-      c.mentors.some(m => m.name.toLowerCase().includes(q))
+      (c.mentors && c.mentors.some(m => m.name.toLowerCase().includes(q)))
     );
   }, [query, courses]);
 

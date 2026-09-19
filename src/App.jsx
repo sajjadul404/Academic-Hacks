@@ -18,14 +18,12 @@ import { DotnetArchitectureModal } from './components/DotnetArchitectureModal';
 import { TestimonialsSection, FaqSection } from './components/ExtraSections';
 
 import { COURSES } from './data/mockData';
-import { Course, SpotlightItem, User, CartItem } from './types';
 import { localStore, supabase, isSupabaseConfigured } from './lib/supabase';
-import confetti from 'canvas-confetti';
 
 export default function App() {
-  const [courses, setCourses] = useState<Course[]>(COURSES);
-  const [cart, setCart] = useState<CartItem[]>(() => localStore.getCart());
-  const [user, setUser] = useState<User | null>(() => localStore.getUser());
+  const [courses, setCourses] = useState(COURSES);
+  const [cart, setCart] = useState(() => localStore.getCart());
+  const [user, setUser] = useState(() => localStore.getUser());
 
   // Modals & Drawers
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -34,12 +32,12 @@ export default function App() {
   const [isDotnetGuideOpen, setIsDotnetGuideOpen] = useState(false);
   
   // Selected detailed views
-  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
-  const [selectedSpotlight, setSelectedSpotlight] = useState<SpotlightItem | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [selectedSpotlight, setSelectedSpotlight] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
   // Toast feedback state
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [toastMessage, setToastMessage] = useState(null);
 
   // Sync cart to localStore
   useEffect(() => {
@@ -68,21 +66,21 @@ export default function App() {
     }
   }, []);
 
-  const showToast = (msg: string) => {
+  const showToast = (msg) => {
     setToastMessage(msg);
     setTimeout(() => {
       setToastMessage(null);
     }, 3000);
   };
 
-  const handleAddToCart = (course: Course) => {
+  const handleAddToCart = (course) => {
     if (cart.some(item => item.course.id === course.id)) {
       showToast('কোর্সটি ইতোমধ্যে আপনার কার্টে যুক্ত আছে!');
       setIsCartOpen(true);
       return;
     }
 
-    const newItem: CartItem = {
+    const newItem = {
       course,
       addedAt: new Date().toISOString()
     };
@@ -90,7 +88,7 @@ export default function App() {
     showToast(`"${course.title}" কার্টে যোগ করা হয়েছে!`);
   };
 
-  const handleRemoveFromCart = (courseId: string) => {
+  const handleRemoveFromCart = (courseId) => {
     setCart(prev => prev.filter(item => item.course.id !== courseId));
     showToast('আইটেমটি কার্ট থেকে সরানো হয়েছে।');
   };
@@ -99,7 +97,7 @@ export default function App() {
     setCart([]);
   };
 
-  const handleCheckoutSuccess = (purchasedCourseIds: string[]) => {
+  const handleCheckoutSuccess = (purchasedCourseIds) => {
     if (user) {
       setUser(prev => prev ? {
         ...prev,
@@ -109,7 +107,7 @@ export default function App() {
     showToast('অভিনন্দন! আপনার এনরোলমেন্ট সফল হয়েছে।');
   };
 
-  const handleEnrollNowDirect = (course: Course) => {
+  const handleEnrollNowDirect = (course) => {
     if (!cart.some(item => item.course.id === course.id)) {
       setCart(prev => [...prev, { course, addedAt: new Date().toISOString() }]);
     }
@@ -124,7 +122,7 @@ export default function App() {
     showToast('আপনি সফলভাবে লগ আউট হয়েছেন।');
   };
 
-  const handleNavigateSection = (sectionId: string) => {
+  const handleNavigateSection = (sectionId) => {
     if (sectionId === 'free-courses') {
       const freeCourse = courses.find(c => c.isFree);
       if (freeCourse) {
@@ -142,7 +140,7 @@ export default function App() {
     }
   };
 
-  const handleSelectCategory = (categoryId: string, name: string) => {
+  const handleSelectCategory = (categoryId, name) => {
     setSelectedCategory(name);
     const admissionSection = document.getElementById('admission');
     if (admissionSection) {

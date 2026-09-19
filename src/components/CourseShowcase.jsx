@@ -12,22 +12,14 @@ import {
   Sparkles,
   ArrowUpRight
 } from 'lucide-react';
-import { Course } from '../types';
 
-interface CourseShowcaseProps {
-  courses: Course[];
-  onSelectCourse: (course: Course) => void;
-  onAddToCart: (course: Course) => void;
-  cartCourseIds: string[];
-}
-
-export const CourseShowcase: React.FC<CourseShowcaseProps> = ({
-  courses,
+export const CourseShowcase = ({
+  courses = [],
   onSelectCourse,
   onAddToCart,
-  cartCourseIds
+  cartCourseIds = []
 }) => {
-  const [filterCategory, setFilterCategory] = useState<string>('All');
+  const [filterCategory, setFilterCategory] = useState('All');
   const [currentPage, setCurrentPage] = useState(0);
 
   const categories = [
@@ -57,47 +49,41 @@ export const CourseShowcase: React.FC<CourseShowcaseProps> = ({
     <section id="admission" className="py-16 lg:py-24 bg-white border-y border-slate-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Section Top Header matching screenshot */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-          <div className="flex items-center gap-3">
-            <span className="px-3.5 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-extrabold border border-blue-100 tracking-wide">
-              জনপ্রিয় কোর্স সমূহ
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-['Outfit',sans-serif]">
-              Admission Course (HSC-26)
+        {/* Section Top Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+          <div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold mb-2.5">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>জনপ্রিয় লাইভ কোর্সসমূহ</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 font-['Outfit',sans-serif] tracking-tight">
+              আমাদের স্পেশাল লাইভ ব্যাচ
             </h2>
+            <p className="text-sm text-slate-500 font-medium mt-1">
+              সেরা শিক্ষকদের সাথে লাইভ ক্লাসে অংশ নিয়ে প্রস্তুতিকে এগিয়ে রাখো
+            </p>
           </div>
 
-          <div className="flex items-center gap-4">
-            <button 
-              onClick={() => setFilterCategory('All')}
-              className="text-sm font-bold text-indigo-600 hover:text-indigo-800 hover:underline cursor-pointer"
+          {/* Carousel Arrows */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handlePrev}
+              disabled={currentPage === 0}
+              className="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 hover:text-indigo-600 hover:border-indigo-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
-              View All
+              <ChevronLeft className="w-5 h-5" />
             </button>
-            <div className="flex items-center gap-1.5">
-              <button
-                onClick={handlePrev}
-                disabled={currentPage === 0}
-                aria-label="Previous courses"
-                className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              <button
-                onClick={handleNext}
-                disabled={(currentPage + 1) * 4 >= filteredCourses.length}
-                aria-label="Next courses"
-                className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
+            <button
+              onClick={handleNext}
+              className="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 hover:text-indigo-600 hover:border-indigo-300 transition-colors"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
           </div>
         </div>
 
-        {/* Filter Pills */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-8 scrollbar-none">
+        {/* Filter Tabs */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-8 no-scrollbar">
           {categories.map((cat) => (
             <button
               key={cat.id}
@@ -105,9 +91,9 @@ export const CourseShowcase: React.FC<CourseShowcaseProps> = ({
                 setFilterCategory(cat.id);
                 setCurrentPage(0);
               }}
-              className={`px-4 py-2 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap transition-all cursor-pointer ${
+              className={`px-4 py-2 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap transition-all cursor-pointer ${
                 filterCategory === cat.id
-                  ? 'bg-slate-900 text-white shadow-md'
+                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200/80'
               }`}
             >
@@ -116,35 +102,36 @@ export const CourseShowcase: React.FC<CourseShowcaseProps> = ({
           ))}
         </div>
 
-        {/* Courses 4-Column Grid matching the 4 admission cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+        {/* Course Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {filteredCourses.map((course) => {
             const inCart = cartCourseIds.includes(course.id);
             return (
               <div
                 key={course.id}
                 id={`course-card-${course.id}`}
-                className="group flex flex-col bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-sm hover:shadow-xl hover:border-indigo-300 transition-all duration-300 relative"
+                className="group relative bg-white rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col overflow-hidden"
               >
-                {/* Thumbnail Header */}
-                <div 
-                  className="relative aspect-[16/10] overflow-hidden bg-slate-900 cursor-pointer"
-                  onClick={() => onSelectCourse(course)}
-                >
+                {/* Card Thumbnail Image */}
+                <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
                   <img
                     src={course.thumbnail}
                     alt={course.title}
-                    referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
                   />
+                  
+                  {/* Category Pill */}
+                  <div className="absolute top-2.5 left-2.5">
+                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-white/95 text-indigo-700 shadow-sm backdrop-blur-sm">
+                      {course.category}
+                    </span>
+                  </div>
 
-                  {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-
-                  {/* Badge Top Left */}
+                  {/* Badge */}
                   {course.badge && (
-                    <div className="absolute top-2.5 left-2.5">
-                      <span className="px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider bg-rose-600/90 text-white backdrop-blur-sm shadow">
+                    <div className="absolute bottom-2.5 left-2.5">
+                      <span className="px-2 py-0.5 rounded-md text-[10px] font-black bg-rose-600 text-white shadow-sm">
                         {course.badge}
                       </span>
                     </div>

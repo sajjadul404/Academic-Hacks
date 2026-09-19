@@ -1,15 +1,8 @@
 import React from 'react';
-import { X, Sparkles, Zap, ArrowRight, ShieldCheck, Star } from 'lucide-react';
-import { SpotlightItem } from '../types';
+import { X, Sparkles, Zap, ArrowRight, Star } from 'lucide-react';
 
-interface SpotlightDetailModalProps {
-  item: SpotlightItem | null;
-  onClose: () => void;
-  onExploreCourses: () => void;
-}
-
-export const SpotlightDetailModal: React.FC<SpotlightDetailModalProps> = ({
-  item,
+export const SpotlightDetailModal = ({
+  item = null,
   onClose,
   onExploreCourses
 }) => {

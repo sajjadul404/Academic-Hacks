@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, HelpCircle, Star, Quote, Award, Sparkles } from 'lucide-react';
 import { TESTIMONIALS, FAQ_ITEMS } from '../data/mockData';
 
-export const TestimonialsSection: React.FC = () => {
+export const TestimonialsSection = () => {
   return (
     <section className="py-16 lg:py-24 bg-[#F4F7FC]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -58,10 +58,10 @@ export const TestimonialsSection: React.FC = () => {
   );
 };
 
-export const FaqSection: React.FC = () => {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+export const FaqSection = () => {
+  const [openIndex, setOpenIndex] = useState(0);
 
-  const toggleFaq = (index: number) => {
+  const toggleFaq = (index) => {
     setOpenIndex(prev => (prev === index ? null : index));
   };
 

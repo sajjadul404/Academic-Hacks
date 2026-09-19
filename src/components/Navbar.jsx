@@ -11,22 +11,10 @@ import {
   Sparkles,
   Code2
 } from 'lucide-react';
-import { User, CartItem } from '../types';
 
-interface NavbarProps {
-  cart: CartItem[];
-  user: User | null;
-  onOpenCart: () => void;
-  onOpenAuth: () => void;
-  onOpenSearch: () => void;
-  onOpenDotnetGuide: () => void;
-  onLogout: () => void;
-  onNavigateSection: (sectionId: string) => void;
-}
-
-export const Navbar: React.FC<NavbarProps> = ({
-  cart,
-  user,
+export const Navbar = ({
+  cart = [],
+  user = null,
   onOpenCart,
   onOpenAuth,
   onOpenSearch,

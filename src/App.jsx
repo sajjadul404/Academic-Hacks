@@ -16,16 +16,33 @@ import { SearchModal } from './components/SearchModal';
 import { FloatingWhatsApp } from './components/FloatingWhatsApp';
 import { DotnetArchitectureModal } from './components/DotnetArchitectureModal';
 import { TestimonialsSection, FaqSection } from './components/ExtraSections';
+import { AdminPanel } from './components/AdminPanel';
 
-import { COURSES } from './data/mockData';
+import { dataStore } from './lib/dataStore';
 import { localStore, supabase, isSupabaseConfigured } from './lib/supabase';
+import { isUserAdmin, ADMIN_CREDENTIALS } from './lib/authConfig';
 
 export default function App() {
-  const [courses, setCourses] = useState(COURSES);
+  // Global customizable content states from persistent dataStore
+  const [courses, setCourses] = useState(() => dataStore.getCourses());
+  const [spotlights, setSpotlights] = useState(() => dataStore.getSpotlights());
+  const [categories, setCategories] = useState(() => dataStore.getCategories());
+  const [stats, setStats] = useState(() => dataStore.getStats());
+  const [testimonials, setTestimonials] = useState(() => dataStore.getTestimonials());
+  const [faqs, setFaqs] = useState(() => dataStore.getFaqs());
+  const [siteSettings, setSiteSettings] = useState(() => dataStore.getSettings());
+  const [orders, setOrders] = useState(() => dataStore.getOrders());
+
+  // Cart and user auth states
   const [cart, setCart] = useState(() => localStore.getCart());
   const [user, setUser] = useState(() => localStore.getUser());
 
+  // Strict Admin Privilege Flag:
+  // Admin panel access is ONLY permitted if logged in as sajjaduli724@gmail.com
+  const isAdmin = isUserAdmin(user);
+
   // Modals & Drawers
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -39,6 +56,39 @@ export default function App() {
   // Toast feedback state
   const [toastMessage, setToastMessage] = useState(null);
 
+  // Sync data store changes to localStorage
+  useEffect(() => {
+    dataStore.saveCourses(courses);
+  }, [courses]);
+
+  useEffect(() => {
+    dataStore.saveSpotlights(spotlights);
+  }, [spotlights]);
+
+  useEffect(() => {
+    dataStore.saveCategories(categories);
+  }, [categories]);
+
+  useEffect(() => {
+    dataStore.saveStats(stats);
+  }, [stats]);
+
+  useEffect(() => {
+    dataStore.saveTestimonials(testimonials);
+  }, [testimonials]);
+
+  useEffect(() => {
+    dataStore.saveFaqs(faqs);
+  }, [faqs]);
+
+  useEffect(() => {
+    dataStore.saveSettings(siteSettings);
+  }, [siteSettings]);
+
+  useEffect(() => {
+    dataStore.saveOrders(orders);
+  }, [orders]);
+
   // Sync cart to localStore
   useEffect(() => {
     localStore.saveCart(cart);
@@ -49,7 +99,31 @@ export default function App() {
     localStore.saveUser(user);
   }, [user]);
 
-  // Optional: check Supabase user session on startup if credentials exist
+  // If user is not admin, close the admin panel immediately
+  useEffect(() => {
+    if (!isAdmin && isAdminOpen) {
+      setIsAdminOpen(false);
+    }
+  }, [isAdmin, isAdminOpen]);
+
+  // Keyboard shortcut: Ctrl+Shift+A opens Admin Panel ONLY for logged-in Admin
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+        e.preventDefault();
+        if (isAdmin) {
+          setIsAdminOpen(prev => !prev);
+        } else {
+          showToast(`এডমিন প্যানেলে প্রবেশ করতে ${ADMIN_CREDENTIALS.email} দিয়ে লগইন করুন।`);
+          setIsAuthOpen(true);
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isAdmin]);
+
+  // Check Supabase user session on startup if credentials exist
   useEffect(() => {
     if (isSupabaseConfigured && supabase) {
       supabase.auth.getSession().then(({ data: { session } }) => {
@@ -70,7 +144,7 @@ export default function App() {
     setToastMessage(msg);
     setTimeout(() => {
       setToastMessage(null);
-    }, 3000);
+    }, 3500);
   };
 
   const handleAddToCart = (course) => {
@@ -98,6 +172,21 @@ export default function App() {
   };
 
   const handleCheckoutSuccess = (purchasedCourseIds) => {
+    // Record order in admin history
+    const totalAmount = cart.reduce((sum, item) => sum + (item.course?.price || 0), 0);
+    const newOrder = {
+      id: `ORD-${Math.floor(1000 + Math.random() * 9000)}`,
+      studentName: user?.name || 'অনলাইন শিক্ষার্থী',
+      studentPhone: user?.phone || '০১৭XXXXXXX',
+      studentEmail: user?.email || 'student@academichacks.edu.bd',
+      courseNames: cart.map(item => item.course?.title).filter(Boolean).join(', ') || 'কোর্স এনরোলমেন্ট',
+      amount: totalAmount || 2500,
+      paymentMethod: 'bKash / Card',
+      status: 'completed',
+      date: new Date().toISOString().split('T')[0]
+    };
+    setOrders(prev => [newOrder, ...prev]);
+
     if (user) {
       setUser(prev => prev ? {
         ...prev,
@@ -119,6 +208,7 @@ export default function App() {
       await supabase.auth.signOut();
     }
     setUser(null);
+    setIsAdminOpen(false);
     showToast('আপনি সফলভাবে লগ আউট হয়েছেন।');
   };
 
@@ -165,28 +255,33 @@ export default function App() {
       <Navbar
         cart={cart}
         user={user}
+        siteSettings={siteSettings}
+        isAdmin={isAdmin}
         onOpenCart={() => setIsCartOpen(true)}
         onOpenAuth={() => setIsAuthOpen(true)}
         onOpenSearch={() => setIsSearchOpen(true)}
         onOpenDotnetGuide={() => setIsDotnetGuideOpen(true)}
+        onOpenAdmin={isAdmin ? () => setIsAdminOpen(true) : null}
         onLogout={handleLogout}
         onNavigateSection={handleNavigateSection}
       />
 
-      {/* Main Body Flow matching screenshot */}
+      {/* Main Body Flow */}
       <main className="flex-grow">
         
         {/* 1. Hero Spotlight Carousel Section */}
         <HeroSpotlight
+          items={spotlights}
           onExploreCourses={() => handleNavigateSection('admission')}
           onSelectSpotlight={(item) => setSelectedSpotlight(item)}
         />
 
         {/* 2. Glassmorphic Key Metrics Stats Bar */}
-        <StatsBar />
+        <StatsBar stats={stats} />
 
         {/* 3. Browse Courses by Class Category Grid */}
         <CategoryGrid
+          categories={categories}
           onSelectCategory={handleSelectCategory}
           selectedCategory={selectedCategory}
         />
@@ -206,10 +301,10 @@ export default function App() {
         <BenefitsSection />
 
         {/* 7. Student Success Testimonials */}
-        <TestimonialsSection />
+        <TestimonialsSection testimonials={testimonials} />
 
         {/* 8. Frequently Asked Questions (FAQ) */}
-        <FaqSection />
+        <FaqSection faqs={faqs} />
 
         {/* 9. Newsletter Email Subscription Bar */}
         <Newsletter />
@@ -217,10 +312,40 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <Footer onNavigateSection={handleNavigateSection} />
+      <Footer 
+        onNavigateSection={handleNavigateSection} 
+        onOpenAdmin={isAdmin ? () => setIsAdminOpen(true) : null}
+        siteSettings={siteSettings}
+        isAdmin={isAdmin}
+      />
 
       {/* Floating WhatsApp Support Button */}
       <FloatingWhatsApp />
+
+      {/* Full Admin Control Panel - ONLY accessible if logged in as Admin */}
+      {isAdmin && (
+        <AdminPanel
+          isOpen={isAdminOpen}
+          onClose={() => setIsAdminOpen(false)}
+          courses={courses}
+          setCourses={setCourses}
+          spotlights={spotlights}
+          setSpotlights={setSpotlights}
+          categories={categories}
+          setCategories={setCategories}
+          stats={stats}
+          setStats={setStats}
+          testimonials={testimonials}
+          setTestimonials={setTestimonials}
+          faqs={faqs}
+          setFaqs={setFaqs}
+          siteSettings={siteSettings}
+          setSiteSettings={setSiteSettings}
+          orders={orders}
+          setOrders={setOrders}
+          showToast={showToast}
+        />
+      )}
 
       {/* Interactive Modals */}
       <CartDrawer
@@ -254,7 +379,12 @@ export default function App() {
         onClose={() => setIsAuthOpen(false)}
         onLoginSuccess={(loggedUser) => {
           setUser(loggedUser);
-          showToast(`স্বাগতম, ${loggedUser.name}!`);
+          if (isUserAdmin(loggedUser)) {
+            showToast('স্বাগতম সাজ্জাদুল! এডমিন প্যানেল সক্রিয় হয়েছে।');
+            setIsAdminOpen(true);
+          } else {
+            showToast(`স্বাগতম, ${loggedUser.name}!`);
+          }
         }}
       />
 

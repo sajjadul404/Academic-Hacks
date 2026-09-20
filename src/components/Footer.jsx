@@ -8,10 +8,17 @@ import {
   Linkedin,
   Phone,
   Mail,
-  MapPin
+  MapPin,
+  ShieldCheck
 } from 'lucide-react';
 
-export const Footer = ({ onNavigateSection }) => {
+export const Footer = ({ onNavigateSection, onOpenAdmin, siteSettings = null, isAdmin = false }) => {
+  const brandTitle = siteSettings?.brandName || 'Academic Hacks';
+  const brandTagline = siteSettings?.brandTagline || 'শিক্ষার সহজ পথ';
+  const helpline = siteSettings?.helpline || '০৯৬৩৮-০০০০০ (সকাল ১০টা - রাত ১০টা)';
+  const email = siteSettings?.email || 'support@academichacks.edu.bd';
+  const address = siteSettings?.address || 'ঢাকা, বাংলাদেশ';
+
   return (
     <footer id="contact" className="bg-[#EBF0FA] border-t border-slate-200/80 pt-16 pb-12 text-slate-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -27,30 +34,30 @@ export const Footer = ({ onNavigateSection }) => {
               </div>
               <div className="flex flex-col">
                 <span className="text-xl font-extrabold bg-gradient-to-r from-blue-700 to-purple-800 bg-clip-text text-transparent font-['Outfit',sans-serif]">
-                  Academic Hacks
+                  {brandTitle}
                 </span>
                 <span className="text-[11px] text-slate-500 font-medium font-['Hind_Siliguri',sans-serif]">
-                  শিক্ষার সহজ পথ
+                  {brandTagline}
                 </span>
               </div>
             </div>
 
             <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-sm mb-6">
-              শিক্ষার সহজ পথ, সাফল্যের নতুন দিগন্ত। মানসম্মত অনলাইন শিক্ষা সবার জন্য সহজ ও accessible করাই Academic Hacks-এর মূল লক্ষ্য।
+              শিক্ষার সহজ পথ, সাফল্যের নতুন দিগন্ত। মানসম্মত অনলাইন শিক্ষা সবার জন্য সহজ ও accessible করাই {brandTitle}-এর মূল লক্ষ্য।
             </p>
 
             <div className="space-y-2 text-xs text-slate-600">
               <p className="flex items-center gap-2">
                 <Phone className="w-3.5 h-3.5 text-indigo-600" />
-                <span>হেল্পলাইন: ০৯৬৩৮-০০০০০ (সকাল ১০টা - রাত ১০টা)</span>
+                <span>হেল্পলাইন: {helpline}</span>
               </p>
               <p className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-indigo-600" />
-                <span>support@academichacks.edu.bd</span>
+                <span>{email}</span>
               </p>
               <p className="flex items-center gap-2">
                 <MapPin className="w-3.5 h-3.5 text-indigo-600" />
-                <span>ঢাকা, বাংলাদেশ</span>
+                <span>{address}</span>
               </p>
             </div>
           </div>
@@ -187,13 +194,26 @@ export const Footer = ({ onNavigateSection }) => {
 
         </div>
 
-        {/* Bottom Copyright */}
+        {/* Bottom Copyright & Admin Trigger */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>© 2026 Academic Hacks. সর্বস্বত্ব সংরক্ষিত।</p>
-          <div className="flex items-center gap-1">
-            <span>Made with</span>
-            <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500 inline" />
-            <span>for students across Bangladesh</span>
+          <p>© 2026 {brandTitle}. সর্বস্বত্ব সংরক্ষিত।</p>
+          
+          <div className="flex items-center gap-4">
+            {isAdmin && onOpenAdmin && (
+              <button
+                onClick={onOpenAdmin}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-200/90 hover:bg-amber-300 text-amber-950 font-bold text-xs transition-colors cursor-pointer"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-amber-800" />
+                <span>অ্যাডমিন প্যানেল</span>
+              </button>
+            )}
+
+            <div className="flex items-center gap-1">
+              <span>Made with</span>
+              <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500 inline" />
+              <span>for students</span>
+            </div>
           </div>
         </div>
 

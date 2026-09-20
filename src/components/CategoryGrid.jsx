@@ -12,7 +12,8 @@ import { CATEGORIES } from '../data/mockData';
 
 export const CategoryGrid = ({
   onSelectCategory,
-  selectedCategory = 'All'
+  selectedCategory = 'All',
+  categories = CATEGORIES
 }) => {
   const getIcon = (iconName) => {
     switch (iconName) {
@@ -54,7 +55,7 @@ export const CategoryGrid = ({
 
         {/* Categories Grid (2 rows of 3 columns) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {CATEGORIES.map((cat) => {
+          {categories.map((cat) => {
             const isSelected = selectedCategory === cat.name;
             return (
               <div

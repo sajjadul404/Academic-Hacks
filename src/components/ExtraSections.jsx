@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, HelpCircle, Star, Quote, Award, Sparkles } from 'lucide-react';
 import { TESTIMONIALS, FAQ_ITEMS } from '../data/mockData';
 
-export const TestimonialsSection = () => {
+export const TestimonialsSection = ({ testimonials = TESTIMONIALS }) => {
   return (
     <section className="py-16 lg:py-24 bg-[#F4F7FC]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -23,9 +23,9 @@ export const TestimonialsSection = () => {
           </p>
         </div>
 
-        {/* 3 Testimonials Cards */}
+        {/* Testimonials Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {TESTIMONIALS.map((t) => (
+          {testimonials.map((t) => (
             <div
               key={t.id}
               className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
@@ -58,7 +58,7 @@ export const TestimonialsSection = () => {
   );
 };
 
-export const FaqSection = () => {
+export const FaqSection = ({ faqs = FAQ_ITEMS }) => {
   const [openIndex, setOpenIndex] = useState(0);
 
   const toggleFaq = (index) => {
@@ -86,7 +86,7 @@ export const FaqSection = () => {
 
         {/* FAQ Accordion */}
         <div className="space-y-3.5">
-          {FAQ_ITEMS.map((item, index) => {
+          {faqs.map((item, index) => {
             const isOpen = openIndex === index;
             return (
               <div

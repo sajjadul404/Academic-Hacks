@@ -9,21 +9,28 @@ import {
   LogOut, 
   BookOpen, 
   Sparkles,
-  Code2
+  Code2,
+  ShieldCheck
 } from 'lucide-react';
 
 export const Navbar = ({
   cart = [],
   user = null,
+  siteSettings = null,
   onOpenCart,
   onOpenAuth,
   onOpenSearch,
   onOpenDotnetGuide,
+  onOpenAdmin,
   onLogout,
-  onNavigateSection
+  onNavigateSection,
+  isAdmin = false
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+
+  const brandTitle = siteSettings?.brandName || 'Academic Hacks';
+  const brandTagline = siteSettings?.brandTagline || 'শিক্ষার সহজ পথ';
 
   const navLinks = [
     { name: 'Home', bengaliName: 'হোম', id: 'hero' },
@@ -35,82 +42,114 @@ export const Navbar = ({
   ];
 
   return (
-    <header className="sticky top-0 z-40 w-full backdrop-blur-xl bg-white/80 border-b border-indigo-50/60 shadow-[0_4px_25px_rgba(79,70,229,0.04)] transition-all duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          
-          {/* Brand Logo */}
-          <div 
-            id="brand-logo"
-            onClick={() => onNavigateSection('hero')}
-            className="flex items-center gap-3 cursor-pointer group select-none"
-          >
-            <div className="relative flex items-center justify-center w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 text-white shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform">
-              <GraduationCap className="w-6 h-6 transform -rotate-6" />
-              <span className="absolute -bottom-1 -right-1 flex h-3.5 w-3.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 border-2 border-white"></span>
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <div className="flex items-center gap-1.5">
-                <span className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-800 bg-clip-text text-transparent font-['Outfit',sans-serif]">
-                  Academic Hacks
-                </span>
-                <span className="px-1.5 py-0.5 text-[10px] font-bold bg-indigo-100 text-indigo-700 rounded-md">
-                  LIVE
+    <>
+      {/* Optional Top Notice Bar */}
+      {siteSettings?.isNoticeActive && siteSettings?.noticeText && (
+        <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-purple-900 text-white text-[11px] sm:text-xs py-2 px-4 text-center font-medium flex items-center justify-center gap-2 border-b border-indigo-700/40 select-none">
+          <span className="px-2 py-0.5 rounded-full bg-amber-400 text-slate-950 font-bold text-[10px]">
+            অফার
+          </span>
+          <span className="truncate max-w-2xl">{siteSettings.noticeText}</span>
+          {isAdmin && onOpenAdmin && (
+            <button
+              onClick={onOpenAdmin}
+              className="ml-2 text-indigo-200 hover:text-white underline text-[10px] font-bold hidden sm:inline"
+            >
+              (এডিট করুন)
+            </button>
+          )}
+        </div>
+      )}
+
+      <header className="sticky top-0 z-40 w-full backdrop-blur-xl bg-white/80 border-b border-indigo-50/60 shadow-[0_4px_25px_rgba(79,70,229,0.04)] transition-all duration-300">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-20">
+            
+            {/* Brand Logo */}
+            <div 
+              id="brand-logo"
+              onClick={() => onNavigateSection('hero')}
+              className="flex items-center gap-3 cursor-pointer group select-none"
+            >
+              <div className="relative flex items-center justify-center w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 text-white shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform">
+                <GraduationCap className="w-6 h-6 transform -rotate-6" />
+                <span className="absolute -bottom-1 -right-1 flex h-3.5 w-3.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 border-2 border-white"></span>
                 </span>
               </div>
-              <span className="text-xs text-slate-500 font-medium tracking-wide font-['Hind_Siliguri',sans-serif]">
-                শিক্ষার সহজ পথ
-              </span>
-            </div>
-          </div>
-
-          {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
-            {navLinks.map((link) => (
-              <button
-                key={link.id}
-                id={`nav-link-${link.id}`}
-                onClick={() => onNavigateSection(link.id)}
-                className="px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:text-indigo-600 hover:bg-indigo-50/70 transition-all cursor-pointer"
-              >
-                {link.name}
-              </button>
-            ))}
-          </nav>
-
-          {/* Right Action Icons & Auth */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            
-            {/* Search Icon */}
-            <button
-              id="btn-open-search"
-              onClick={onOpenSearch}
-              aria-label="Search courses"
-              className="p-2.5 rounded-full text-slate-600 hover:text-indigo-600 hover:bg-slate-100/80 transition-all cursor-pointer"
-            >
-              <Search className="w-5 h-5" />
-            </button>
-
-            {/* Cart Icon with badge */}
-            <button
-              id="btn-open-cart"
-              onClick={onOpenCart}
-              aria-label="Open cart"
-              className="relative p-2.5 rounded-full text-slate-600 hover:text-indigo-600 hover:bg-slate-100/80 transition-all cursor-pointer"
-            >
-              <ShoppingCart className="w-5 h-5" />
-              {cart.length > 0 && (
-                <span 
-                  id="cart-badge-count"
-                  className="absolute -top-0.5 -right-0.5 flex items-center justify-center min-w-[20px] h-5 px-1 text-xs font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full border-2 border-white shadow-sm animate-pulse"
-                >
-                  {cart.length}
+              <div className="flex flex-col">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-800 bg-clip-text text-transparent font-['Outfit',sans-serif]">
+                    {brandTitle}
+                  </span>
+                  <span className="px-1.5 py-0.5 text-[10px] font-bold bg-indigo-100 text-indigo-700 rounded-md">
+                    LIVE
+                  </span>
+                </div>
+                <span className="text-xs text-slate-500 font-medium tracking-wide font-['Hind_Siliguri',sans-serif]">
+                  {brandTagline}
                 </span>
+              </div>
+            </div>
+
+            {/* Desktop Navigation Links */}
+            <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
+              {navLinks.map((link) => (
+                <button
+                  key={link.id}
+                  id={`nav-link-${link.id}`}
+                  onClick={() => onNavigateSection(link.id)}
+                  className="px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:text-indigo-600 hover:bg-indigo-50/70 transition-all cursor-pointer"
+                >
+                  {link.name}
+                </button>
+              ))}
+            </nav>
+
+            {/* Right Action Icons & Auth */}
+            <div className="flex items-center gap-2 sm:gap-2.5">
+              
+              {/* Admin Panel Button - Visible ONLY to logged-in Admin */}
+              {isAdmin && onOpenAdmin && (
+                <button
+                  id="btn-open-admin"
+                  onClick={onOpenAdmin}
+                  title="এডমিন প্যানেল খুলুন"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-amber-500 hover:bg-amber-600 text-slate-950 shadow-sm shadow-amber-500/20 transition-all cursor-pointer"
+                >
+                  <ShieldCheck className="w-4 h-4 text-slate-950" />
+                  <span className="hidden sm:inline">এডমিন প্যানেল</span>
+                </button>
               )}
-            </button>
+
+              {/* Search Icon */}
+              <button
+                id="btn-open-search"
+                onClick={onOpenSearch}
+                aria-label="Search courses"
+                className="p-2.5 rounded-full text-slate-600 hover:text-indigo-600 hover:bg-slate-100/80 transition-all cursor-pointer"
+              >
+                <Search className="w-5 h-5" />
+              </button>
+
+              {/* Cart Icon with badge */}
+              <button
+                id="btn-open-cart"
+                onClick={onOpenCart}
+                aria-label="Open cart"
+                className="relative p-2.5 rounded-full text-slate-600 hover:text-indigo-600 hover:bg-slate-100/80 transition-all cursor-pointer"
+              >
+                <ShoppingCart className="w-5 h-5" />
+                {cart.length > 0 && (
+                  <span 
+                    id="cart-badge-count"
+                    className="absolute -top-0.5 -right-0.5 flex items-center justify-center min-w-[20px] h-5 px-1 text-xs font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full border-2 border-white shadow-sm animate-pulse"
+                  >
+                    {cart.length}
+                  </span>
+                )}
+              </button>
 
             {/* Login / Profile Button */}
             {user ? (
@@ -196,10 +235,24 @@ export const Navbar = ({
                   <span className="text-xs text-slate-400">({link.bengaliName})</span>
                 </button>
               ))}
+
+              {isAdmin && onOpenAdmin && (
+                <button
+                  onClick={() => {
+                    onOpenAdmin();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="mt-2 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-bold text-slate-950 bg-amber-400 hover:bg-amber-500 rounded-xl transition-all"
+                >
+                  <ShieldCheck className="w-4 h-4 text-slate-950" />
+                  <span>এডমিন কন্ট্রোল প্যানেল</span>
+                </button>
+              )}
             </div>
           </div>
         )}
       </div>
     </header>
+    </>
   );
 };

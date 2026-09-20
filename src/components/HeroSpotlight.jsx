@@ -4,13 +4,13 @@ import { SPOTLIGHT_ITEMS } from '../data/mockData';
 
 export const HeroSpotlight = ({
   onExploreCourses,
-  onSelectSpotlight
+  onSelectSpotlight,
+  items = SPOTLIGHT_ITEMS
 }) => {
-  const items = SPOTLIGHT_ITEMS;
-  const count = items.length;
+  const count = items && items.length > 0 ? items.length : 1;
 
-  // Active index (default to index 2: Velocity)
-  const [activeIndex, setActiveIndex] = useState(2);
+  // Active index (default to index 2 or 0)
+  const [activeIndex, setActiveIndex] = useState(() => Math.min(2, count - 1));
   const [isHovered, setIsHovered] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState(0);
@@ -107,7 +107,7 @@ export const HeroSpotlight = ({
     };
   };
 
-  const currentItem = items[activeIndex];
+  const currentItem = items[activeIndex] || items[0] || {};
 
   return (
     <section 

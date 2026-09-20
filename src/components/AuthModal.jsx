@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, User as UserIcon, Mail, Phone, Lock, ArrowRight, Sparkles, CheckCircle2, Shield } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { ADMIN_CREDENTIALS } from '../lib/authConfig';
 
 export const AuthModal = ({
   isOpen = false,
@@ -23,6 +24,34 @@ export const AuthModal = ({
     setLoading(true);
 
     try {
+      const normalizedEmail = email.toLowerCase().trim();
+      const isAdminEmail = normalizedEmail === ADMIN_CREDENTIALS.email.toLowerCase();
+
+      // STRICT ADMIN CHECK:
+      // Only sajjaduli724@gmail.com with password Sajjadul123 gets admin access
+      if (isAdminEmail) {
+        if (password !== ADMIN_CREDENTIALS.password) {
+          setError('ভুল পাসওয়ার্ড! এডমিন অ্যাকাউন্টের সঠিক পাসওয়ার্ড দিন (Sajjadul123)।');
+          setLoading(false);
+          return;
+        }
+
+        const adminUser = {
+          id: 'admin_sajjadul',
+          name: ADMIN_CREDENTIALS.name,
+          email: ADMIN_CREDENTIALS.email,
+          phone: phone || '01700000000',
+          role: 'admin',
+          isAdmin: true,
+          enrolledCourses: []
+        };
+
+        onLoginSuccess(adminUser);
+        onClose();
+        return;
+      }
+
+      // Regular student Supabase login if configured
       if (isSupabaseConfigured && supabase) {
         if (mode === 'register') {
           const { data, error: signUpError } = await supabase.auth.signUp({
@@ -39,6 +68,8 @@ export const AuthModal = ({
               name: name || email.split('@')[0],
               email: data.user.email || email,
               phone,
+              role: 'student',
+              isAdmin: false,
               enrolledCourses: []
             };
             onLoginSuccess(newUser);
@@ -57,6 +88,8 @@ export const AuthModal = ({
               name: data.user.user_metadata?.name || email.split('@')[0],
               email: data.user.email || email,
               phone: data.user.user_metadata?.phone,
+              role: 'student',
+              isAdmin: false,
               enrolledCourses: []
             };
             onLoginSuccess(loggedUser);
@@ -66,18 +99,20 @@ export const AuthModal = ({
         }
       }
 
-      // Offline fallback: simulate instantaneous login/registration
+      // Offline fallback for general students
       setTimeout(() => {
         const dummyUser = {
           id: 'user_' + Date.now(),
           name: name || (email ? email.split('@')[0] : 'শিক্ষার্থী'),
           email: email || 'student@academichacks.edu.bd',
           phone: phone || '01700000000',
+          role: 'student',
+          isAdmin: false,
           enrolledCourses: ['course-admission-01']
         };
         onLoginSuccess(dummyUser);
         onClose();
-      }, 500);
+      }, 400);
 
     } catch (err) {
       console.error(err);
@@ -87,12 +122,40 @@ export const AuthModal = ({
     }
   };
 
+  const handleAdminOneClickLogin = () => {
+    setEmail(ADMIN_CREDENTIALS.email);
+    setPassword(ADMIN_CREDENTIALS.password);
+    setMode('login');
+    setError('');
+    
+    const adminUser = {
+      id: 'admin_sajjadul',
+      name: ADMIN_CREDENTIALS.name,
+      email: ADMIN_CREDENTIALS.email,
+      phone: '01700000000',
+      role: 'admin',
+      isAdmin: true,
+      enrolledCourses: []
+    };
+    onLoginSuccess(adminUser);
+    onClose();
+  };
+
+  const handleFillAdminCredentials = () => {
+    setEmail(ADMIN_CREDENTIALS.email);
+    setPassword(ADMIN_CREDENTIALS.password);
+    setMode('login');
+    setError('');
+  };
+
   const handleDemoStudentLogin = () => {
     const demoUser = {
       id: 'demo_student_01',
-      name: 'সাদিয়া তাসনিম',
+      name: 'সাদিয়া তাসনিম (শিক্ষার্থী)',
       email: 'sadia.buet26@gmail.com',
       phone: '01812345678',
+      role: 'student',
+      isAdmin: false,
       enrolledCourses: ['course-admission-01', 'course-eng-01']
     };
     onLoginSuccess(demoUser);
@@ -159,13 +222,22 @@ export const AuthModal = ({
           )}
 
           <div>
-            <label className="text-xs font-bold text-slate-700 block mb-1">ইমেইল ঠিকানা</label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="text-xs font-bold text-slate-700 block">ইমেইল ঠিকানা</label>
+              <button
+                type="button"
+                onClick={handleFillAdminCredentials}
+                className="text-[10px] font-bold text-indigo-600 hover:text-indigo-800"
+              >
+                এডমিন তথ্য পূরণ করুন
+              </button>
+            </div>
             <div className="relative">
               <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="email"
                 required
-                placeholder="student@example.com"
+                placeholder="sajjaduli724@gmail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -196,12 +268,17 @@ export const AuthModal = ({
               <input
                 type="password"
                 required
-                placeholder="কমপক্ষে ৬ ডিজিটের পাসওয়ার্ড"
+                placeholder="পাসওয়ার্ড লিখুন"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
+            {email.toLowerCase().trim() === ADMIN_CREDENTIALS.email && (
+              <p className="mt-1 text-[11px] text-amber-600 font-medium">
+                এডমিন পাসওয়ার্ড: <span className="font-mono font-bold">Sajjadul123</span>
+              </p>
+            )}
           </div>
 
           <button
@@ -213,15 +290,24 @@ export const AuthModal = ({
             <ArrowRight className="w-4 h-4" />
           </button>
 
-          {/* Quick Demo One-Click Login */}
-          <div className="pt-2">
+          {/* Dedicated Admin Login Button */}
+          <div className="pt-2 space-y-2">
+            <button
+              type="button"
+              onClick={handleAdminOneClickLogin}
+              className="w-full py-2.5 rounded-xl text-xs font-bold text-slate-900 bg-amber-100 hover:bg-amber-200 border border-amber-300 transition-colors flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <Shield className="w-4 h-4 text-amber-700" />
+              <span>এডমিন লগইন (sajjaduli724@gmail.com)</span>
+            </button>
+
             <button
               type="button"
               onClick={handleDemoStudentLogin}
-              className="w-full py-2.5 rounded-xl text-xs font-bold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 transition-colors flex items-center justify-center gap-1.5"
+              className="w-full py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-50 hover:bg-slate-100 border border-slate-200 transition-colors flex items-center justify-center gap-1.5"
             >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>ডেমো শিক্ষার্থী হিসেবে ১-ক্লিকে প্রবেশ করুন</span>
+              <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
+              <span>সাধারণ শিক্ষার্থী হিসেবে প্রবেশ করুন</span>
             </button>
           </div>
 

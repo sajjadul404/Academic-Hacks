@@ -46,8 +46,8 @@ export const DEFAULT_STATS = [
 export const DEFAULT_SITE_SETTINGS = {
   brandName: 'Academic Hacks',
   brandTagline: 'শিক্ষার সহজ পথ',
-  noticeText: 'ভর্তি চলছে! এইচএসসি ২০২৬ ও এডমিশন প্রোগ্রামে স্পেশাল ২৫% ছাড়। প্রোমোকোড: HACKS26',
-  isNoticeActive: true,
+  noticeText: '',
+  isNoticeActive: false,
   helpline: '০৯৬৩৮-০০০০০',
   helplineTime: 'সকাল ১০টা - রাত ১০টা',
   supportEmail: 'support@academichacks.edu.bd',

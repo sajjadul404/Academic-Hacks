@@ -43,24 +43,6 @@ export const Navbar = ({
 
   return (
     <>
-      {/* Optional Top Notice Bar */}
-      {siteSettings?.isNoticeActive && siteSettings?.noticeText && (
-        <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-purple-900 text-white text-[11px] sm:text-xs py-2 px-4 text-center font-medium flex items-center justify-center gap-2 border-b border-indigo-700/40 select-none">
-          <span className="px-2 py-0.5 rounded-full bg-amber-400 text-slate-950 font-bold text-[10px]">
-            অফার
-          </span>
-          <span className="truncate max-w-2xl">{siteSettings.noticeText}</span>
-          {isAdmin && onOpenAdmin && (
-            <button
-              onClick={onOpenAdmin}
-              className="ml-2 text-indigo-200 hover:text-white underline text-[10px] font-bold hidden sm:inline"
-            >
-              (এডিট করুন)
-            </button>
-          )}
-        </div>
-      )}
-
       <header className="sticky top-0 z-40 w-full backdrop-blur-xl bg-white/80 border-b border-indigo-50/60 shadow-[0_4px_25px_rgba(79,70,229,0.04)] transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">

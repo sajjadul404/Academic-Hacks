@@ -36,7 +36,6 @@ export const Navbar = ({
     { name: 'Home', bengaliName: 'হোম', id: 'hero' },
     { name: 'Courses', bengaliName: 'কোর্সসমূহ', id: 'courses' },
     { name: 'Admission', bengaliName: 'অ্যাডমিশন', id: 'admission' },
-    { name: 'Free Course', bengaliName: 'ফ্রি কোর্স', id: 'free-courses' },
     { name: 'About Us', bengaliName: 'আমাদের সম্পর্কে', id: 'about' },
     { name: 'Contact', bengaliName: 'যোগাযোগ', id: 'contact' },
   ];

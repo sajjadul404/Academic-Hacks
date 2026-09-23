@@ -292,6 +292,7 @@ export default function App() {
           onSelectCourse={(course) => setSelectedCourse(course)}
           onAddToCart={handleAddToCart}
           cartCourseIds={cartCourseIds}
+          selectedCategory={selectedCategory}
         />
 
         {/* 5. Why Choose Us / Online Learning Benefits Section */}

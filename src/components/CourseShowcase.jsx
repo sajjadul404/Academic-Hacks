@@ -17,17 +17,25 @@ export const CourseShowcase = ({
   courses = [],
   onSelectCourse,
   onAddToCart,
-  cartCourseIds = []
+  cartCourseIds = [],
+  selectedCategory = 'All'
 }) => {
-  const [filterCategory, setFilterCategory] = useState('All');
+  const [filterCategory, setFilterCategory] = useState(selectedCategory || 'All');
   const [currentPage, setCurrentPage] = useState(0);
+
+  useEffect(() => {
+    if (selectedCategory) {
+      setFilterCategory(selectedCategory);
+      setCurrentPage(0);
+    }
+  }, [selectedCategory]);
 
   const categories = [
     { id: 'All', label: 'সকল কোর্স' },
     { id: 'Admission', label: 'Admission (HSC-26)' },
+    { id: 'Exam', label: 'মডেল টেস্ট ও এক্সাম' },
     { id: 'Engineering', label: 'ইঞ্জিনিয়ারিং' },
     { id: 'Medical', label: 'মেডিকেল (DMC)' },
-    { id: 'Arts & Commerce', label: 'মানবিক ও বিভাগ পরিবর্তন' },
     { id: 'HSC', label: 'HSC একাডেমিক' },
     { id: 'Free Course', label: 'ফ্রি কোর্স' }
   ];

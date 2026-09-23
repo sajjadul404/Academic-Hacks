@@ -19,7 +19,7 @@ export interface Course {
   title: string;
   subtitle?: string;
   slug: string;
-  category: 'School' | 'HSC' | 'Admission' | 'Nursing' | 'Arts & Commerce' | 'Free Course' | 'Engineering' | 'Medical';
+  category: 'School' | 'HSC' | 'Admission' | 'Nursing' | 'Exam' | 'Arts & Commerce' | 'Free Course' | 'Engineering' | 'Medical';
   batchYear?: string;
   badge?: string;
   examCount: number;

@@ -6,7 +6,8 @@ import {
   HeartPulse, 
   Palette, 
   Sparkles,
-  ArrowRight
+  ArrowRight,
+  ClipboardCheck
 } from 'lucide-react';
 import { CATEGORIES } from '../data/mockData';
 
@@ -27,6 +28,8 @@ export const CategoryGrid = ({
         return <HeartPulse className="w-7 h-7" />;
       case 'Palette':
         return <Palette className="w-7 h-7" />;
+      case 'ClipboardCheck':
+        return <ClipboardCheck className="w-7 h-7" />;
       case 'Sparkles':
         return <Sparkles className="w-7 h-7" />;
       default:

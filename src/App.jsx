@@ -10,6 +10,7 @@ import { Newsletter } from './components/Newsletter';
 import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
 import { CourseLandingPage } from './components/CourseLandingPage';
+import { LoginPage } from './components/LoginPage';
 import { SpotlightDetailModal } from './components/SpotlightDetailModal';
 import { AuthModal } from './components/AuthModal';
 import { SearchModal } from './components/SearchModal';
@@ -47,6 +48,7 @@ export default function App() {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isDotnetGuideOpen, setIsDotnetGuideOpen] = useState(false);
+  const [isLoginPage, setIsLoginPage] = useState(false);
   
   // Selected detailed views
   const [selectedCourse, setSelectedCourse] = useState(null);
@@ -56,11 +58,15 @@ export default function App() {
   // Toast feedback state
   const [toastMessage, setToastMessage] = useState(null);
 
-  // Sync route / hash for Course Landing Page
+  // Sync route / hash for Course Landing Page & Login Page
   useEffect(() => {
     const handleHash = () => {
       const hash = window.location.hash;
-      if (hash.startsWith('#course/')) {
+      if (hash === '#login' || hash === '#auth') {
+        setIsLoginPage(true);
+        setSelectedCourse(null);
+      } else if (hash.startsWith('#course/')) {
+        setIsLoginPage(false);
         const courseId = hash.replace('#course/', '');
         const found = courses.find(c => c.id === courseId || c.slug === courseId);
         if (found) {
@@ -68,6 +74,7 @@ export default function App() {
         }
       } else if (!hash || hash === '#' || hash === '#home' || hash === '#hero') {
         setSelectedCourse(null);
+        setIsLoginPage(false);
       }
     };
 
@@ -256,7 +263,36 @@ export default function App() {
     showToast('আপনি সফলভাবে লগ আউট হয়েছেন।');
   };
 
+  const handleOpenLogin = () => {
+    setIsLoginPage(true);
+    setSelectedCourse(null);
+    window.location.hash = 'login';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleCloseLogin = () => {
+    setIsLoginPage(false);
+    window.location.hash = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleLoginSuccess = (loggedUser) => {
+    setUser(loggedUser);
+    setIsLoginPage(false);
+    setIsAuthOpen(false);
+    window.location.hash = '';
+    if (isUserAdmin(loggedUser)) {
+      showToast('স্বাগতম সাজ্জাদুল! এডমিন প্যানেল সক্রিয় হয়েছে।');
+      setIsAdminOpen(true);
+    } else {
+      showToast(`স্বাগতম, ${loggedUser.name}!`);
+    }
+  };
+
   const handleSelectCourse = (course) => {
+    if (isLoginPage) {
+      setIsLoginPage(false);
+    }
     setSelectedCourse(course);
     if (course) {
       window.location.hash = `course/${course.id}`;
@@ -267,8 +303,9 @@ export default function App() {
   };
 
   const handleNavigateSection = (sectionId) => {
-    if (selectedCourse) {
+    if (selectedCourse || isLoginPage) {
       setSelectedCourse(null);
+      setIsLoginPage(false);
       window.location.hash = '';
     }
 
@@ -288,12 +325,13 @@ export default function App() {
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
       }
-    }, selectedCourse ? 100 : 0);
+    }, (selectedCourse || isLoginPage) ? 100 : 0);
   };
 
   const handleSelectCategory = (categoryId, name) => {
-    if (selectedCourse) {
+    if (selectedCourse || isLoginPage) {
       setSelectedCourse(null);
+      setIsLoginPage(false);
       window.location.hash = '';
     }
     setSelectedCategory(name);
@@ -302,7 +340,7 @@ export default function App() {
       if (admissionSection) {
         admissionSection.scrollIntoView({ behavior: 'smooth' });
       }
-    }, selectedCourse ? 100 : 0);
+    }, (selectedCourse || isLoginPage) ? 100 : 0);
   };
 
   const cartCourseIds = cart.map(item => item.course.id);
@@ -325,7 +363,7 @@ export default function App() {
         siteSettings={siteSettings}
         isAdmin={isAdmin}
         onOpenCart={() => setIsCartOpen(true)}
-        onOpenAuth={() => setIsAuthOpen(true)}
+        onOpenAuth={handleOpenLogin}
         onOpenSearch={() => setIsSearchOpen(true)}
         onOpenDotnetGuide={() => setIsDotnetGuideOpen(true)}
         onOpenAdmin={isAdmin ? () => setIsAdminOpen(true) : null}
@@ -335,7 +373,13 @@ export default function App() {
 
       {/* Main Body Flow */}
       <main className="flex-grow">
-        {selectedCourse ? (
+        {isLoginPage ? (
+          <LoginPage
+            onBack={handleCloseLogin}
+            onLoginSuccess={handleLoginSuccess}
+            showToast={showToast}
+          />
+        ) : selectedCourse ? (
           <CourseLandingPage
             course={selectedCourse}
             onBack={() => handleSelectCourse(null)}

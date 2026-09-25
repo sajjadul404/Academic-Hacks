@@ -216,6 +216,30 @@ export default function App() {
     showToast('অভিনন্দন! আপনার এনরোলমেন্ট সফল হয়েছে।');
   };
 
+  const handleDirectPaymentSuccess = (course, method, senderPhone, trxId) => {
+    const newOrder = {
+      id: `ORD-${Math.floor(1000 + Math.random() * 9000)}`,
+      studentName: user?.name || 'অনলাইন শিক্ষার্থী',
+      studentPhone: senderPhone || user?.phone || '০১৭XXXXXXX',
+      studentEmail: user?.email || 'student@academichacks.edu.bd',
+      courseNames: course?.title || 'কোর্স এনরোলমেন্ট',
+      amount: course?.price || 0,
+      paymentMethod: method === 'bkash' ? 'bKash' : 'Nagad',
+      trxId: trxId || 'N/A',
+      status: 'completed',
+      date: new Date().toISOString().split('T')[0]
+    };
+    setOrders(prev => [newOrder, ...prev]);
+
+    if (user) {
+      setUser(prev => prev ? {
+        ...prev,
+        enrolledCourses: Array.from(new Set([...(prev.enrolledCourses || []), course.id]))
+      } : null);
+    }
+    showToast(`"${course.title}" কোর্সে আপনার ভর্তি নিশ্চিত হয়েছে!`);
+  };
+
   const handleEnrollNowDirect = (course) => {
     if (!cart.some(item => item.course.id === course.id)) {
       setCart(prev => [...prev, { course, addedAt: new Date().toISOString() }]);
@@ -320,6 +344,7 @@ export default function App() {
             onAddToCart={handleAddToCart}
             inCart={selectedCourse ? cartCourseIds.includes(selectedCourse.id) : false}
             onEnrollNow={handleEnrollNowDirect}
+            onDirectPaymentSuccess={handleDirectPaymentSuccess}
           />
         ) : (
           <>

@@ -11,13 +11,15 @@ import {
   Clock
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { PaymentModal } from './PaymentModal';
 
 export const CourseLandingPage = ({
   course,
   onBack,
   onAddToCart,
   inCart = false,
-  onEnrollNow
+  onEnrollNow,
+  onDirectPaymentSuccess
 }) => {
   // Default open subjects: Biology and ICT (matching screenshot)
   const [openSubjects, setOpenSubjects] = useState({
@@ -35,6 +37,7 @@ export const CourseLandingPage = ({
   const [promoApplied, setPromoApplied] = useState(false);
   const [promoDiscount, setPromoDiscount] = useState(0);
   const [promoError, setPromoError] = useState('');
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -382,8 +385,8 @@ export const CourseLandingPage = ({
               {/* Big Red Coral CTA Button: কোর্সটি কিনুন */}
               <button
                 type="button"
-                onClick={() => onEnrollNow(course)}
-                className="w-full py-3.5 px-4 rounded-xl font-bold text-sm sm:text-base text-white bg-gradient-to-r from-[#EB3349] to-[#F45C43] hover:from-[#DF293F] hover:to-[#E84E34] shadow-md hover:shadow-lg transition-all cursor-pointer text-center block"
+                onClick={() => setIsPaymentModalOpen(true)}
+                className="w-full py-3.5 px-4 rounded-xl font-bold text-sm sm:text-base text-white bg-gradient-to-r from-[#EB3349] to-[#F45C43] hover:from-[#DF293F] hover:to-[#E84E34] shadow-md hover:shadow-lg transition-all cursor-pointer text-center block active:scale-[0.99]"
               >
                 কোর্সটি কিনুন
               </button>
@@ -462,6 +465,19 @@ export const CourseLandingPage = ({
         </div>
 
       </div>
+
+      {/* Payment Popup Modal with bKash and Nagad */}
+      <PaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        course={{
+          ...course,
+          price: finalPrice
+        }}
+        onPaymentSuccess={(c, method, phone, trx) => {
+          onDirectPaymentSuccess?.(c, method, phone, trx);
+        }}
+      />
     </div>
   );
 };

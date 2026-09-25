@@ -9,7 +9,7 @@ import { BenefitsSection } from './components/BenefitsSection';
 import { Newsletter } from './components/Newsletter';
 import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
-import { CourseDetailModal } from './components/CourseDetailModal';
+import { CourseLandingPage } from './components/CourseLandingPage';
 import { SpotlightDetailModal } from './components/SpotlightDetailModal';
 import { AuthModal } from './components/AuthModal';
 import { SearchModal } from './components/SearchModal';
@@ -55,6 +55,26 @@ export default function App() {
 
   // Toast feedback state
   const [toastMessage, setToastMessage] = useState(null);
+
+  // Sync route / hash for Course Landing Page
+  useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash;
+      if (hash.startsWith('#course/')) {
+        const courseId = hash.replace('#course/', '');
+        const found = courses.find(c => c.id === courseId || c.slug === courseId);
+        if (found) {
+          setSelectedCourse(found);
+        }
+      } else if (!hash || hash === '#' || hash === '#home' || hash === '#hero') {
+        setSelectedCourse(null);
+      }
+    };
+
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, [courses]);
 
   // Sync data store changes to localStorage
   useEffect(() => {
@@ -212,11 +232,26 @@ export default function App() {
     showToast('আপনি সফলভাবে লগ আউট হয়েছেন।');
   };
 
+  const handleSelectCourse = (course) => {
+    setSelectedCourse(course);
+    if (course) {
+      window.location.hash = `course/${course.id}`;
+    } else {
+      window.location.hash = '';
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleNavigateSection = (sectionId) => {
+    if (selectedCourse) {
+      setSelectedCourse(null);
+      window.location.hash = '';
+    }
+
     if (sectionId === 'free-courses') {
       const freeCourse = courses.find(c => c.isFree);
       if (freeCourse) {
-        setSelectedCourse(freeCourse);
+        handleSelectCourse(freeCourse);
       } else {
         const el = document.getElementById('admission');
         el?.scrollIntoView({ behavior: 'smooth' });
@@ -224,18 +259,26 @@ export default function App() {
       return;
     }
 
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    setTimeout(() => {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, selectedCourse ? 100 : 0);
   };
 
   const handleSelectCategory = (categoryId, name) => {
-    setSelectedCategory(name);
-    const admissionSection = document.getElementById('admission');
-    if (admissionSection) {
-      admissionSection.scrollIntoView({ behavior: 'smooth' });
+    if (selectedCourse) {
+      setSelectedCourse(null);
+      window.location.hash = '';
     }
+    setSelectedCategory(name);
+    setTimeout(() => {
+      const admissionSection = document.getElementById('admission');
+      if (admissionSection) {
+        admissionSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, selectedCourse ? 100 : 0);
   };
 
   const cartCourseIds = cart.map(item => item.course.id);
@@ -268,48 +311,60 @@ export default function App() {
 
       {/* Main Body Flow */}
       <main className="flex-grow">
-        
-        {/* 1. Hero Spotlight Carousel Section */}
-        <HeroSpotlight
-          items={spotlights}
-          onExploreCourses={() => handleNavigateSection('admission')}
-          onSelectSpotlight={(item) => setSelectedSpotlight(item)}
-        />
+        {selectedCourse ? (
+          <CourseLandingPage
+            course={selectedCourse}
+            onBack={() => handleSelectCourse(null)}
+            onSelectCourse={handleSelectCourse}
+            allCourses={courses}
+            onAddToCart={handleAddToCart}
+            inCart={selectedCourse ? cartCourseIds.includes(selectedCourse.id) : false}
+            onEnrollNow={handleEnrollNowDirect}
+          />
+        ) : (
+          <>
+            {/* 1. Hero Spotlight Carousel Section */}
+            <HeroSpotlight
+              items={spotlights}
+              onExploreCourses={() => handleNavigateSection('admission')}
+              onSelectSpotlight={(item) => setSelectedSpotlight(item)}
+            />
 
-        {/* 2. Glassmorphic Key Metrics Stats Bar */}
-        <StatsBar stats={stats} />
+            {/* 2. Glassmorphic Key Metrics Stats Bar */}
+            <StatsBar stats={stats} />
 
-        {/* 3. Browse Courses by Class Category Grid */}
-        <CategoryGrid
-          categories={categories}
-          onSelectCategory={handleSelectCategory}
-          selectedCategory={selectedCategory}
-        />
+            {/* 3. Browse Courses by Class Category Grid */}
+            <CategoryGrid
+              categories={categories}
+              onSelectCategory={handleSelectCategory}
+              selectedCategory={selectedCategory}
+            />
 
-        {/* 4. Popular Courses Showcase (Admission HSC-26) */}
-        <CourseShowcase
-          courses={courses}
-          onSelectCourse={(course) => setSelectedCourse(course)}
-          onAddToCart={handleAddToCart}
-          cartCourseIds={cartCourseIds}
-          selectedCategory={selectedCategory}
-        />
+            {/* 4. Popular Courses Showcase (Admission HSC-26) */}
+            <CourseShowcase
+              courses={courses}
+              onSelectCourse={handleSelectCourse}
+              onAddToCart={handleAddToCart}
+              cartCourseIds={cartCourseIds}
+              selectedCategory={selectedCategory}
+            />
 
-        {/* 5. Why Choose Us / Online Learning Benefits Section */}
-        <WhyUsSection />
+            {/* 5. Why Choose Us / Online Learning Benefits Section */}
+            <WhyUsSection />
 
-        {/* 6. Academic Hacks Unique Features & Student Benefits Section */}
-        <BenefitsSection />
+            {/* 6. Academic Hacks Unique Features & Student Benefits Section */}
+            <BenefitsSection />
 
-        {/* 7. Student Success Testimonials */}
-        <TestimonialsSection testimonials={testimonials} />
+            {/* 7. Student Success Testimonials */}
+            <TestimonialsSection testimonials={testimonials} />
 
-        {/* 8. Frequently Asked Questions (FAQ) */}
-        <FaqSection faqs={faqs} />
+            {/* 8. Frequently Asked Questions (FAQ) */}
+            <FaqSection faqs={faqs} />
 
-        {/* 9. Newsletter Email Subscription Bar */}
-        <Newsletter />
-
+            {/* 9. Newsletter Email Subscription Bar */}
+            <Newsletter />
+          </>
+        )}
       </main>
 
       {/* Footer */}
@@ -358,14 +413,6 @@ export default function App() {
         onCheckoutSuccess={handleCheckoutSuccess}
       />
 
-      <CourseDetailModal
-        course={selectedCourse}
-        onClose={() => setSelectedCourse(null)}
-        onAddToCart={handleAddToCart}
-        inCart={selectedCourse ? cartCourseIds.includes(selectedCourse.id) : false}
-        onEnrollNow={handleEnrollNowDirect}
-      />
-
       <SpotlightDetailModal
         item={selectedSpotlight}
         onClose={() => setSelectedSpotlight(null)}
@@ -393,7 +440,7 @@ export default function App() {
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
         courses={courses}
-        onSelectCourse={(course) => setSelectedCourse(course)}
+        onSelectCourse={handleSelectCourse}
       />
 
       <DotnetArchitectureModal

@@ -10,6 +10,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { BkashIcon, NagadIcon } from './PaymentLogos';
 
 export const PaymentModal = ({
   isOpen = false,
@@ -112,6 +113,12 @@ export const PaymentModal = ({
                 <ArrowLeft className="w-4 h-4" />
               </button>
             )}
+            {selectedMethod === 'bkash' && (
+              <BkashIcon className="w-7 h-7 rounded-lg shadow-xs flex-shrink-0" />
+            )}
+            {selectedMethod === 'nagad' && (
+              <NagadIcon className="w-7 h-7 rounded-lg shadow-xs flex-shrink-0" />
+            )}
             <div>
               <h3 className="text-sm font-bold text-slate-900 font-['Hind_Siliguri',sans-serif]">
                 {selectedMethod === 'bkash' 
@@ -167,17 +174,8 @@ export const PaymentModal = ({
                 onClick={() => setSelectedMethod('bkash')}
                 className="group p-4 rounded-2xl border-2 border-slate-200 hover:border-[#E2136E] bg-white hover:bg-pink-50/40 transition-all flex flex-col items-center text-center cursor-pointer shadow-xs hover:shadow-md active:scale-98"
               >
-                {/* bKash Brand Icon */}
-                <div className="w-14 h-14 rounded-2xl bg-[#E2136E] text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform mb-2 relative overflow-hidden">
-                  {/* Stylized origami bird icon */}
-                  <svg className="w-9 h-9" viewBox="0 0 100 100" fill="currentColor">
-                    <path d="M15 70 L50 20 L85 70 L50 55 Z" opacity="0.9" />
-                    <circle cx="50" cy="35" r="7" fill="white" />
-                  </svg>
-                  <span className="absolute bottom-1 text-[8px] font-black tracking-widest text-white/90 uppercase font-sans">
-                    BKASH
-                  </span>
-                </div>
+                {/* Official bKash Origami Logo */}
+                <BkashIcon className="w-16 h-16 rounded-2xl shadow-sm group-hover:scale-105 transition-transform mb-2" />
 
                 <span className="text-sm font-bold text-slate-900 group-hover:text-[#E2136E] transition-colors block">
                   বিকাশ
@@ -193,17 +191,8 @@ export const PaymentModal = ({
                 onClick={() => setSelectedMethod('nagad')}
                 className="group p-4 rounded-2xl border-2 border-slate-200 hover:border-[#EA1D25] bg-white hover:bg-orange-50/40 transition-all flex flex-col items-center text-center cursor-pointer shadow-xs hover:shadow-md active:scale-98"
               >
-                {/* Nagad Brand Icon */}
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#EA1D25] via-[#F7941D] to-[#F15A24] text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform mb-2 relative overflow-hidden">
-                  {/* Stylized Nagad flame icon */}
-                  <svg className="w-9 h-9" viewBox="0 0 100 100" fill="currentColor">
-                    <path d="M50 15 C35 35 25 50 25 65 C25 80 37 90 50 90 C63 90 75 80 75 65 C75 50 65 35 50 15 Z" opacity="0.95" />
-                    <circle cx="50" cy="65" r="9" fill="white" />
-                  </svg>
-                  <span className="absolute bottom-1 text-[8px] font-black tracking-widest text-white/90 uppercase font-sans">
-                    NAGAD
-                  </span>
-                </div>
+                {/* Official Nagad Logo */}
+                <NagadIcon className="w-16 h-16 rounded-2xl shadow-sm group-hover:scale-105 transition-transform mb-2" />
 
                 <span className="text-sm font-bold text-slate-900 group-hover:text-[#EA1D25] transition-colors block">
                   নগদ

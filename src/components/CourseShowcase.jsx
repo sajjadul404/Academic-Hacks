@@ -6,8 +6,6 @@ import {
   Users, 
   ChevronLeft, 
   ChevronRight, 
-  ShoppingCart, 
-  Check, 
   Eye, 
   Sparkles,
   ArrowUpRight
@@ -215,25 +213,13 @@ export const CourseShowcase = ({
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        onClick={() => onAddToCart(course)}
-                        title={inCart ? 'Already in cart' : 'Add to cart'}
-                        className={`p-2 rounded-xl border transition-all cursor-pointer ${
-                          inCart
-                            ? 'bg-emerald-50 border-emerald-300 text-emerald-600'
-                            : 'bg-slate-50 border-slate-200 text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 hover:border-indigo-200'
-                        }`}
-                      >
-                        {inCart ? <Check className="w-4 h-4" /> : <ShoppingCart className="w-4 h-4" />}
-                      </button>
-
+                    <div>
                       <button
                         onClick={() => onSelectCourse(course)}
-                        className="px-3 py-1.5 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition-all cursor-pointer flex items-center gap-1"
+                        className="px-3.5 py-1.5 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition-all cursor-pointer flex items-center gap-1 active:scale-[0.98]"
                       >
                         <span>এনরোল</span>
-                        <ArrowUpRight className="w-3 h-3" />
+                        <ArrowUpRight className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </div>

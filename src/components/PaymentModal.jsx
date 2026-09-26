@@ -18,7 +18,8 @@ export const PaymentModal = ({
   onPaymentSuccess
 }) => {
   const [selectedMethod, setSelectedMethod] = useState(null); // null | 'bkash' | 'nagad'
-  const [senderInfo, setSenderInfo] = useState('');
+  const [senderNumber, setSenderNumber] = useState('');
+  const [trxId, setTrxId] = useState('');
   const [copiedNumber, setCopiedNumber] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -42,6 +43,18 @@ export const PaymentModal = ({
     e?.preventDefault();
     setErrorMessage('');
 
+    const cleanNum = senderNumber.trim();
+    if (!cleanNum || cleanNum.length < 11) {
+      setErrorMessage('সঠিক ১১ ডিজিটের মোবাইল নম্বর লিখুন');
+      return;
+    }
+
+    const cleanTrx = trxId.trim();
+    if (!cleanTrx || cleanTrx.length < 5) {
+      setErrorMessage('সঠিক ট্রানজেকশন আইডি (TrxID) লিখুন');
+      return;
+    }
+
     setIsProcessing(true);
 
     setTimeout(() => {
@@ -62,12 +75,13 @@ export const PaymentModal = ({
         onPaymentSuccess?.(
           course, 
           selectedMethod || 'bkash', 
-          senderInfo || '017XXXXXXXX', 
-          `TRX-${Math.random().toString(36).substring(2, 9).toUpperCase()}`
+          cleanNum, 
+          cleanTrx.toUpperCase()
         );
         setIsSuccess(false);
         setSelectedMethod(null);
-        setSenderInfo('');
+        setSenderNumber('');
+        setTrxId('');
         onClose();
       }, 1800);
     }, 900);
@@ -252,18 +266,32 @@ export const PaymentModal = ({
               </div>
             </div>
 
-            {/* Form Input */}
+            {/* Form Inputs: Number and TrxID */}
             <form onSubmit={handleConfirmPayment} className="space-y-3">
               <div>
                 <label className="text-[11px] font-bold text-slate-700 block mb-1">
-                  আপনার মোবাইল নম্বর / Transaction ID (ঐচ্ছিক):
+                  আপনার {selectedMethod === 'bkash' ? 'বিকাশ' : 'নগদ'} নম্বর:
+                </label>
+                <input
+                  type="tel"
+                  value={senderNumber}
+                  onChange={(e) => setSenderNumber(e.target.value)}
+                  placeholder="01XXXXXXXXX"
+                  maxLength={11}
+                  className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 tracking-wide"
+                />
+              </div>
+
+              <div>
+                <label className="text-[11px] font-bold text-slate-700 block mb-1">
+                  ট্রানজেকশন আইডি (Transaction ID / TrxID):
                 </label>
                 <input
                   type="text"
-                  value={senderInfo}
-                  onChange={(e) => setSenderInfo(e.target.value)}
-                  placeholder="017XXXXXXXX বা TrxID"
-                  className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                  value={trxId}
+                  onChange={(e) => setTrxId(e.target.value.toUpperCase())}
+                  placeholder="যেমন: 9J7K3X18"
+                  className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold uppercase focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 font-mono tracking-wider"
                 />
               </div>
 

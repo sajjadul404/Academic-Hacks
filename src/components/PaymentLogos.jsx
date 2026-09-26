@@ -5,57 +5,58 @@ import React from 'react';
  */
 export const BkashIcon = ({ className = "w-14 h-14" }) => (
   <svg 
-    viewBox="0 0 512 512" 
+    viewBox="0 0 1000 1000" 
     className={className} 
     fill="none" 
     xmlns="http://www.w3.org/2000/svg"
   >
-    {/* Rounded squircle background */}
-    <rect width="512" height="512" rx="105" fill="#E2136E" />
+    {/* Rounded squircle background - exact bKash signature color */}
+    <rect width="1000" height="1000" rx="210" fill="#E2136E" />
     
-    {/* Origami Bird Facets with crisp fold seams */}
-    <g stroke="#E2136E" strokeWidth="3" strokeLinejoin="round">
+    {/* White Origami Bird Facets */}
+    <g fill="#FFFFFF">
       {/* 1. Large Top Wing */}
-      <path 
-        d="M65 72 L245 94 L200 246 Z" 
-        fill="#FFFFFF" 
-      />
-      
-      {/* 2. Top-left small wing under-fold */}
-      <path 
-        d="M58 101 L129 171 L65 72 Z" 
-        fill="#FFFFFF" 
-      />
-      
-      {/* 3. Center Body Quadrilateral/Triangle */}
-      <path 
-        d="M245 94 L381 270 L200 246 Z" 
-        fill="#FFFFFF" 
-      />
-      
-      {/* 4. Head with pointed beak */}
-      <path 
-        d="M381 270 L420 186 L454 221 Z" 
-        fill="#FFFFFF" 
-      />
-      
-      {/* 5. Lower Wing / Belly triangle */}
-      <path 
-        d="M200 246 L374 282 L225 350 Z" 
-        fill="#FFFFFF" 
-      />
-      
-      {/* 6. Underwing shadow crease */}
-      <path 
-        d="M250 345 L374 282 L368 296 L258 350 Z" 
-        fill="#E2136E" 
-      />
-      
-      {/* 7. Long Lower Tail */}
-      <path 
-        d="M200 246 L225 350 L143 438 Z" 
-        fill="#FFFFFF" 
-      />
+      <polygon points="124,142 481,184 388,480 256,335" />
+
+      {/* 2. Secondary wing tip fold underneath */}
+      <polygon points="114,202 248,332 172,238" />
+
+      {/* 3. Center Body / Upper Back */}
+      <polygon points="481,184 746,532 388,480" />
+
+      {/* 4. Head and Neck */}
+      <polygon points="646,396 806,362 746,532" />
+      <polygon points="806,362 888,431 796,431" />
+      <polygon points="806,362 796,431 746,532" />
+
+      {/* 5. Lower Belly / Abdomen */}
+      <polygon points="388,480 730,552 442,688" />
+
+      {/* 6. Lower Belly Curved Flap & Accent */}
+      <path d="M486 680 C550 640 640 590 730 552 L724 585 C640 620 560 660 500 684 Z" />
+
+      {/* 7. Long Pointed Tail */}
+      <polygon points="388,480 442,688 281,856" />
+    </g>
+
+    {/* Seam / Crease Lines in #E2136E matching the origami paper cuts */}
+    <g stroke="#E2136E" strokeWidth="13" strokeLinecap="round" strokeLinejoin="round">
+      {/* Main wing spine to center */}
+      <line x1="481" y1="184" x2="388" y2="480" />
+      {/* Wing diagonal to center */}
+      <line x1="256" y1="335" x2="388" y2="480" />
+      {/* Back to lower body horizontal crease */}
+      <line x1="388" y1="480" x2="746" y2="532" />
+      {/* Neck crease */}
+      <line x1="646" y1="396" x2="746" y2="532" />
+      <line x1="806" y1="362" x2="796" y2="431" />
+      <line x1="796" y1="431" x2="746" y2="532" />
+      {/* Abdomen to tail */}
+      <line x1="388" y1="480" x2="442" y2="688" />
+      {/* Belly accent slit */}
+      <path d="M472 682 C550 635 635 590 726 552" fill="none" strokeWidth="14" />
+      {/* Wing secondary tip slit */}
+      <line x1="172" y1="238" x2="248" y2="332" strokeWidth="11" />
     </g>
   </svg>
 );

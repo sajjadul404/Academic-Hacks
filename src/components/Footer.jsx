@@ -199,13 +199,18 @@ export const Footer = ({ onNavigateSection, onOpenAdmin, siteSettings = null, is
           <p>© 2026 {brandTitle}. সর্বস্বত্ব সংরক্ষিত।</p>
           
           <div className="flex items-center gap-4">
-            {isAdmin && onOpenAdmin && (
+            {onOpenAdmin && (
               <button
                 onClick={onOpenAdmin}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-200/90 hover:bg-amber-300 text-amber-950 font-bold text-xs transition-colors cursor-pointer"
+                title="ওয়েবসাইট ম্যানেজমেন্ট ও এডমিন প্যানেল"
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-xs transition-all cursor-pointer shadow-xs active:scale-95 ${
+                  isAdmin 
+                    ? 'bg-amber-400 hover:bg-amber-500 text-slate-950 shadow-amber-400/20' 
+                    : 'bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700'
+                }`}
               >
-                <ShieldCheck className="w-3.5 h-3.5 text-amber-800" />
-                <span>অ্যাডমিন প্যানেল</span>
+                <ShieldCheck className={`w-3.5 h-3.5 ${isAdmin ? 'text-slate-950' : 'text-amber-400'}`} />
+                <span>এডমিন প্যানেল</span>
               </button>
             )}
 

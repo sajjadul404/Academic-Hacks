@@ -26,14 +26,11 @@ import {
   ExternalLink,
   ShieldCheck,
   GraduationCap,
-  CreditCard,
   Tag,
   Copy,
   Check,
   Filter
 } from 'lucide-react';
-import { BkashIcon, NagadIcon } from './PaymentLogos';
-import { PaymentSettingsTab } from './admin/PaymentSettingsTab';
 import { CouponsTab } from './admin/CouponsTab';
 import { OrdersTab } from './admin/OrdersTab';
 
@@ -60,7 +57,7 @@ export const AdminPanel = ({
   onClose,
   showToast
 }) => {
-  const [activeTab, setActiveTab] = useState('overview'); // overview, courses, spotlights, stats, payments, orders, coupons, settings, testimonials, backup
+  const [activeTab, setActiveTab] = useState('overview'); // overview, courses, spotlights, stats, orders, coupons, settings, testimonials, backup
 
   // Course modal state
   const [editingCourse, setEditingCourse] = useState(null);
@@ -488,23 +485,6 @@ export const AdminPanel = ({
             </button>
 
             <button
-              onClick={() => setActiveTab('payments')}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer text-left ${
-                activeTab === 'payments'
-                  ? 'bg-indigo-50 text-indigo-700 border border-indigo-100 shadow-sm'
-                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <CreditCard className="w-4 h-4" />
-                <span>বিকাশ ও নগদ পেমেন্ট</span>
-              </div>
-              <span className="px-1.5 py-0.5 text-[10px] bg-pink-100 text-pink-700 rounded-md font-bold">
-                গেটওয়ে
-              </span>
-            </button>
-
-            <button
               onClick={() => setActiveTab('orders')}
               className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer text-left ${
                 activeTab === 'orders'
@@ -610,7 +590,6 @@ export const AdminPanel = ({
               { id: 'overview', label: 'ওভারভিউ' },
               { id: 'courses', label: `কোর্স (${courses.length})` },
               { id: 'spotlights', label: `স্পটলাইট (${spotlights.length})` },
-              { id: 'payments', label: 'বিকাশ ও নগদ' },
               { id: 'orders', label: `অর্ডার (${orders.length})` },
               { id: 'coupons', label: `কুপন (${coupons.length})` },
               { id: 'stats', label: 'কাউন্টার' },
@@ -1442,20 +1421,6 @@ export const AdminPanel = ({
               </div>
 
             </div>
-          )}
-
-          {/* ============================================================== */}
-          {/* TAB: PAYMENT GATEWAY SETTINGS */}
-          {/* ============================================================== */}
-          {activeTab === 'payments' && (
-            <PaymentSettingsTab
-              siteSettings={localSettings}
-              setSiteSettings={(newSettings) => {
-                setLocalSettings(newSettings);
-                setSiteSettings(newSettings);
-              }}
-              showToast={showToast}
-            />
           )}
 
           {/* ============================================================== */}

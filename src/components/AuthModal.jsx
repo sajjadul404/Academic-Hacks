@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { X, User as UserIcon, Mail, Phone, Lock, ArrowRight, Check, ChevronRight } from 'lucide-react';
+import { X, User as UserIcon, Mail, Phone, Lock, ArrowRight, Check, ChevronRight, ShieldCheck } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
-import { ADMIN_CREDENTIALS, isUserAdmin } from '../lib/authConfig';
+import { ADMIN_CREDENTIALS, ADMIN_PHONE, normalizePhone } from '../lib/authConfig';
 
 export const AuthModal = ({
   isOpen = false,
@@ -29,23 +29,26 @@ export const AuthModal = ({
     setLoading(true);
 
     try {
-      const normalizedEmail = email.toLowerCase().trim();
-      const isAdminEmail = normalizedEmail === ADMIN_CREDENTIALS.email.toLowerCase();
+      const rawInput = email.trim();
+      const inputPhone = normalizePhone(rawInput);
+      const adminPhoneNorm = normalizePhone(ADMIN_PHONE);
+      const isAdminPhone = inputPhone === adminPhoneNorm || normalizePhone(phone) === adminPhoneNorm;
+      const isAdminEmail = rawInput.toLowerCase() === ADMIN_CREDENTIALS.email.toLowerCase();
 
       // STRICT ADMIN CHECK:
-      // Only sajjaduli724@gmail.com with password Sajjadul123 gets admin access
-      if (isAdminEmail) {
-        if (password !== ADMIN_CREDENTIALS.password) {
+      // Only 01560060092 gets admin access
+      if (isAdminPhone || isAdminEmail) {
+        if (password && password !== ADMIN_CREDENTIALS.password && password !== ADMIN_PHONE) {
           setError('ভুল পাসওয়ার্ড! এডমিন অ্যাকাউন্টের সঠিক পাসওয়ার্ড দিন।');
           setLoading(false);
           return;
         }
 
         const adminUser = {
-          id: 'admin_sajjadul',
+          id: `admin_${adminPhoneNorm}`,
           name: ADMIN_CREDENTIALS.name,
           email: ADMIN_CREDENTIALS.email,
-          phone: phone || '01700000000',
+          phone: ADMIN_PHONE,
           role: 'admin',
           isAdmin: true,
           enrolledCourses: []
@@ -348,13 +351,13 @@ export const AuthModal = ({
             )}
 
             <div>
-              <label className="text-xs font-bold text-slate-700 block mb-1">ইমেইল ঠিকানা</label>
+              <label className="text-xs font-bold text-slate-700 block mb-1">ইমেইল অথবা মোবাইল নম্বর</label>
               <div className="relative">
                 <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
-                  type="email"
+                  type="text"
                   required
-                  placeholder="example@gmail.com"
+                  placeholder="01560060092 অথবা example@gmail.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -435,6 +438,28 @@ export const AuthModal = ({
                 />
               </svg>
               <span>Continue with Google</span>
+            </button>
+
+            {/* 1-Click Quick Admin Login */}
+            <button
+              type="button"
+              onClick={() => {
+                const adminUser = {
+                  id: `admin_${normalizePhone(ADMIN_PHONE)}`,
+                  name: ADMIN_CREDENTIALS.name,
+                  email: ADMIN_CREDENTIALS.email,
+                  phone: ADMIN_PHONE,
+                  role: 'admin',
+                  isAdmin: true,
+                  enrolledCourses: []
+                };
+                onLoginSuccess(adminUser);
+                onClose();
+              }}
+              className="w-full py-2.5 px-3 rounded-2xl bg-amber-50 hover:bg-amber-100 border border-amber-200/80 text-amber-900 text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-2xs active:scale-98"
+            >
+              <ShieldCheck className="w-4 h-4 text-amber-600" />
+              <span>{ADMIN_PHONE} দিয়ে এডমিন লগইন (Admin Login)</span>
             </button>
 
             {/* Switch Mode */}

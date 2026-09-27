@@ -154,6 +154,18 @@ export const Navbar = ({
                       <p className="text-sm font-bold text-slate-900">{user.name}</p>
                       <p className="text-xs text-slate-500 truncate">{user.email}</p>
                     </div>
+                    {isAdmin && onOpenAdmin && (
+                      <button
+                        onClick={() => {
+                          setIsUserMenuOpen(false);
+                          onOpenAdmin();
+                        }}
+                        className="w-full px-4 py-2 text-left text-sm text-amber-900 bg-amber-50 hover:bg-amber-100 flex items-center gap-2 font-bold transition-colors cursor-pointer"
+                      >
+                        <ShieldCheck className="w-4 h-4 text-amber-600" />
+                        এডমিন কন্ট্রোল প্যানেল
+                      </button>
+                    )}
                     <button
                       onClick={() => {
                         setIsUserMenuOpen(false);

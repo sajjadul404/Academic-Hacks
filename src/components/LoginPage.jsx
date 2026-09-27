@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Smartphone } from 'lucide-react';
+import { ArrowLeft, Smartphone, ShieldCheck } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { ADMIN_CREDENTIALS } from '../lib/authConfig';
+import { ADMIN_CREDENTIALS, ADMIN_PHONE, normalizePhone } from '../lib/authConfig';
 
 export const LoginPage = ({
   onBack,
@@ -90,11 +90,11 @@ export const LoginPage = ({
       setIsLoading(false);
 
       const cleanPhone = phone.trim().replace(/[^0-9]/g, '');
-      const isRegisteredAdmin = cleanPhone === '01712345678' || cleanPhone === '01700000000';
+      const isRegisteredAdmin = normalizePhone(cleanPhone) === normalizePhone(ADMIN_PHONE);
 
       const loggedUser = {
-        id: `user_${cleanPhone}`,
-        name: isRegisteredAdmin ? 'সাজ্জাদুল ইসলাম' : `শিক্ষার্থী (${cleanPhone.slice(-4)})`,
+        id: isRegisteredAdmin ? `admin_${normalizePhone(ADMIN_PHONE)}` : `user_${cleanPhone}`,
+        name: isRegisteredAdmin ? ADMIN_CREDENTIALS.name : `শিক্ষার্থী (${cleanPhone.slice(-4)})`,
         email: isRegisteredAdmin ? ADMIN_CREDENTIALS.email : `${cleanPhone}@academichacks.edu.bd`,
         phone: cleanPhone,
         role: isRegisteredAdmin ? 'admin' : 'student',
@@ -200,6 +200,18 @@ export const LoginPage = ({
                   >
                     {isLoading ? 'যাচাই করা হচ্ছে...' : 'সাবমিট করুন'}
                   </button>
+
+                  {/* Quick Admin Number Fill Option */}
+                  <div className="pt-1 text-center">
+                    <button
+                      type="button"
+                      onClick={() => setPhone(ADMIN_PHONE)}
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-800 hover:text-amber-900 bg-amber-50 hover:bg-amber-100 border border-amber-200/80 px-3 py-1.5 rounded-xl transition-all cursor-pointer shadow-2xs"
+                    >
+                      <ShieldCheck className="w-3.5 h-3.5 text-amber-600" />
+                      <span>এডমিন নম্বর ইনপুট করুন ({ADMIN_PHONE})</span>
+                    </button>
+                  </div>
                 </form>
               </>
             )}

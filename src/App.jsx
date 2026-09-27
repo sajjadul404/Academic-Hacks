@@ -21,7 +21,7 @@ import { AdminPanel } from './components/AdminPanel';
 
 import { dataStore } from './lib/dataStore';
 import { localStore, supabase, isSupabaseConfigured } from './lib/supabase';
-import { isUserAdmin, ADMIN_CREDENTIALS } from './lib/authConfig';
+import { isUserAdmin, ADMIN_CREDENTIALS, ADMIN_PHONE } from './lib/authConfig';
 
 export default function App() {
   // Global customizable content states from persistent dataStore
@@ -59,11 +59,15 @@ export default function App() {
   // Toast feedback state
   const [toastMessage, setToastMessage] = useState(null);
 
-  // Sync route / hash for Course Landing Page & Login Page
+  // Sync route / hash for Course Landing Page & Login Page & Admin Panel
   useEffect(() => {
     const handleHash = () => {
       const hash = window.location.hash;
-      if (hash === '#login' || hash === '#auth') {
+      if (hash === '#admin' || hash === '#adminpanel') {
+        setIsLoginPage(false);
+        setSelectedCourse(null);
+        handleOpenAdmin();
+      } else if (hash === '#login' || hash === '#auth') {
         setIsLoginPage(true);
         setSelectedCourse(null);
       } else if (hash.startsWith('#course/')) {
@@ -82,7 +86,7 @@ export default function App() {
     handleHash();
     window.addEventListener('hashchange', handleHash);
     return () => window.removeEventListener('hashchange', handleHash);
-  }, [courses]);
+  }, [courses, isAdmin]);
 
   // Sync data store changes to localStorage
   useEffect(() => {
@@ -131,24 +135,29 @@ export default function App() {
     localStore.saveUser(user);
   }, [user]);
 
-  // If user is not admin, close the admin panel immediately
+  // Open Admin Panel - ONLY for user logged in with 01560060092
+  const handleOpenAdmin = () => {
+    if (isAdmin) {
+      setIsAdminOpen(true);
+    } else {
+      showToast(`এডমিন প্যানেলে প্রবেশ করতে শুধুমাত্র ${ADMIN_PHONE} নম্বর দিয়ে লগইন করুন।`);
+      setIsLoginPage(true);
+    }
+  };
+
+  // If user is not admin, ensure admin panel cannot remain open
   useEffect(() => {
     if (!isAdmin && isAdminOpen) {
       setIsAdminOpen(false);
     }
   }, [isAdmin, isAdminOpen]);
 
-  // Keyboard shortcut: Ctrl+Shift+A opens Admin Panel ONLY for logged-in Admin
+  // Keyboard shortcut: Ctrl+Shift+A opens Admin Panel
   useEffect(() => {
     const handleKeyDown = (e) => {
       if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
         e.preventDefault();
-        if (isAdmin) {
-          setIsAdminOpen(prev => !prev);
-        } else {
-          showToast(`এডমিন প্যানেলে প্রবেশ করতে ${ADMIN_CREDENTIALS.email} দিয়ে লগইন করুন।`);
-          setIsAuthOpen(true);
-        }
+        handleOpenAdmin();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -371,7 +380,7 @@ export default function App() {
         onOpenAuth={handleOpenLogin}
         onOpenSearch={() => setIsSearchOpen(true)}
         onOpenDotnetGuide={() => setIsDotnetGuideOpen(true)}
-        onOpenAdmin={isAdmin ? () => setIsAdminOpen(true) : null}
+        onOpenAdmin={handleOpenAdmin}
         onLogout={handleLogout}
         onNavigateSection={handleNavigateSection}
       />
@@ -445,7 +454,7 @@ export default function App() {
       {/* Footer */}
       <Footer 
         onNavigateSection={handleNavigateSection} 
-        onOpenAdmin={isAdmin ? () => setIsAdminOpen(true) : null}
+        onOpenAdmin={handleOpenAdmin}
         siteSettings={siteSettings}
         isAdmin={isAdmin}
       />
@@ -453,8 +462,8 @@ export default function App() {
       {/* Floating WhatsApp Support Button */}
       <FloatingWhatsApp />
 
-      {/* Full Admin Control Panel - ONLY accessible if logged in as Admin */}
-      {isAdmin && (
+      {/* Full Admin Control Panel - ONLY accessible if logged in with 01560060092 */}
+      {isAdmin && isAdminOpen && (
         <AdminPanel
           isOpen={isAdminOpen}
           onClose={() => setIsAdminOpen(false)}

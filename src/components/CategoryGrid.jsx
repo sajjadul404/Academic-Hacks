@@ -7,16 +7,48 @@ import {
   Palette, 
   Sparkles,
   ArrowRight,
-  ClipboardCheck
+  ClipboardCheck,
+  Languages,
+  Globe
 } from 'lucide-react';
 import { CATEGORIES } from '../data/mockData';
+
+export const IeltsBadgeLogo = ({ className = "w-9 h-9" }) => (
+  <svg 
+    viewBox="0 0 40 40" 
+    className={className} 
+    fill="none" 
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    {/* Global orbit ring representing international english testing */}
+    <circle cx="20" cy="20" r="17" stroke="white" strokeWidth="1.5" strokeDasharray="3 2" opacity="0.6"/>
+    {/* Iconic IELTS badge pill/plate */}
+    <rect x="4.5" y="10.5" width="31" height="19" rx="5" fill="white" />
+    {/* Bold Red IELTS typography matching the official identity */}
+    <text 
+      x="20" 
+      y="23.5" 
+      textAnchor="middle" 
+      fill="#E11D48" 
+      fontFamily="'Outfit', system-ui, -apple-system, sans-serif" 
+      fontWeight="900" 
+      fontSize="9.5" 
+      letterSpacing="0.8"
+    >
+      IELTS
+    </text>
+  </svg>
+);
 
 export const CategoryGrid = ({
   onSelectCategory,
   selectedCategory = 'All',
   categories = CATEGORIES
 }) => {
-  const getIcon = (iconName) => {
+  const getIcon = (iconName, categoryName = '', categoryId = '') => {
+    if (iconName === 'IELTS' || categoryName === 'IELTS' || categoryId === 'cat-ielts') {
+      return <IeltsBadgeLogo className="w-9 h-9" />;
+    }
     switch (iconName) {
       case 'School':
         return <School className="w-7 h-7" />;
@@ -24,14 +56,18 @@ export const CategoryGrid = ({
         return <GraduationCap className="w-7 h-7" />;
       case 'BookOpen':
         return <BookOpen className="w-7 h-7" />;
-      case 'HeartPulse':
-        return <HeartPulse className="w-7 h-7" />;
+      case 'Languages':
+        return <Languages className="w-7 h-7" />;
+      case 'Globe':
+        return <Globe className="w-7 h-7" />;
       case 'Palette':
         return <Palette className="w-7 h-7" />;
       case 'ClipboardCheck':
         return <ClipboardCheck className="w-7 h-7" />;
       case 'Sparkles':
         return <Sparkles className="w-7 h-7" />;
+      case 'HeartPulse':
+        return <HeartPulse className="w-7 h-7" />;
       default:
         return <BookOpen className="w-7 h-7" />;
     }
@@ -74,7 +110,7 @@ export const CategoryGrid = ({
                 <div className="flex items-center gap-4">
                   {/* Category Icon Badge */}
                   <div className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 bg-gradient-to-tr ${cat.gradient} text-white shadow-md shadow-indigo-500/10 group-hover:scale-105 transition-transform`}>
-                    {getIcon(cat.icon)}
+                    {getIcon(cat.icon, cat.name, cat.id)}
                   </div>
 
                   {/* Title & Count */}

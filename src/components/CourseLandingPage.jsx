@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { PaymentModal } from './PaymentModal';
+import { dataStore } from '../lib/dataStore';
 
 export const CourseLandingPage = ({
   course,
@@ -19,7 +20,8 @@ export const CourseLandingPage = ({
   onAddToCart,
   inCart = false,
   onEnrollNow,
-  onDirectPaymentSuccess
+  onDirectPaymentSuccess,
+  siteSettings
 }) => {
   // Default open subjects: Biology and ICT (matching screenshot)
   const [openSubjects, setOpenSubjects] = useState({
@@ -62,7 +64,32 @@ export const CourseLandingPage = ({
     const code = promoCode.trim().toUpperCase();
     if (!code) return;
 
-    if (code === 'HACKS26' || code === 'FREE26' || code === 'TARGET100' || code === 'SPECIAL') {
+    const availableCoupons = dataStore.getCoupons();
+    const matched = availableCoupons.find(c => c.code.toUpperCase() === code && c.isActive);
+
+    if (matched) {
+      if (matched.minAmount && basePrice < matched.minAmount) {
+        setPromoError(`এই কুপন ব্যবহারের জন্য সর্বনিম্ন ৳${matched.minAmount} টাকার কোর্স হতে হবে`);
+        return;
+      }
+      setPromoApplied(true);
+      if (matched.type === 'percent') {
+        setPromoDiscount(matched.discount / 100);
+      } else {
+        // Flat discount
+        const percentEquiv = basePrice > 0 ? (matched.discount / basePrice) : 0;
+        setPromoDiscount(percentEquiv);
+      }
+      try {
+        confetti({
+          particleCount: 40,
+          spread: 55,
+          origin: { y: 0.6 }
+        });
+      } catch (err) {
+        // ignore
+      }
+    } else if (code === 'HACKS26' || code === 'FREE26' || code === 'TARGET100' || code === 'SPECIAL') {
       setPromoApplied(true);
       setPromoDiscount(0.15); // 15% discount
       try {
@@ -75,7 +102,7 @@ export const CourseLandingPage = ({
         // ignore
       }
     } else {
-      setPromoError('কুপন কোডটি সঠিক নয়! HACKS26 ট্রাই করুন।');
+      setPromoError('কুপন কোডটি সঠিক বা সক্রিয় নয়! HACKS20 ট্রাই করুন।');
     }
   };
 
@@ -470,6 +497,7 @@ export const CourseLandingPage = ({
       <PaymentModal
         isOpen={isPaymentModalOpen}
         onClose={() => setIsPaymentModalOpen(false)}
+        siteSettings={siteSettings}
         course={{
           ...course,
           price: finalPrice

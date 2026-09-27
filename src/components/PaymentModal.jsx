@@ -11,12 +11,14 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { BkashIcon, NagadIcon } from './PaymentLogos';
+import { dataStore } from '../lib/dataStore';
 
 export const PaymentModal = ({
   isOpen = false,
   onClose,
   course,
-  onPaymentSuccess
+  onPaymentSuccess,
+  siteSettings
 }) => {
   const [selectedMethod, setSelectedMethod] = useState(null); // null | 'bkash' | 'nagad'
   const [senderNumber, setSenderNumber] = useState('');
@@ -28,11 +30,15 @@ export const PaymentModal = ({
 
   if (!isOpen || !course) return null;
 
+  const currentSettings = siteSettings || dataStore.getSettings();
   const payableAmount = course.price ?? 0;
-  const officialBkashNumber = '01700-123456';
-  const officialNagadNumber = '01800-654321';
+  const officialBkashNumber = currentSettings?.bkashNumber || '01700-123456';
+  const officialNagadNumber = currentSettings?.nagadNumber || '01800-654321';
+  const bkashAccountType = currentSettings?.bkashType || 'Send Money (Personal)';
+  const nagadAccountType = currentSettings?.nagadType || 'Send Money (Personal)';
 
   const currentNumber = selectedMethod === 'bkash' ? officialBkashNumber : officialNagadNumber;
+  const currentAccountType = selectedMethod === 'bkash' ? bkashAccountType : nagadAccountType;
 
   const handleCopy = () => {
     navigator.clipboard?.writeText(currentNumber.replace('-', ''));
@@ -225,8 +231,8 @@ export const PaymentModal = ({
                 <span className="text-slate-600 font-semibold text-[11px]">
                   {selectedMethod === 'bkash' ? 'বিকাশ নম্বর' : 'নগদ নম্বর'}:
                 </span>
-                <span className="text-[10px] font-bold text-slate-500 uppercase">
-                  Personal
+                <span className="text-[10px] font-bold text-slate-600 bg-white px-2 py-0.5 rounded border border-slate-200">
+                  {currentAccountType}
                 </span>
               </div>
 

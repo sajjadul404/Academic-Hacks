@@ -116,26 +116,26 @@ export const CATEGORIES: CategoryItem[] = [
     badgeColor: 'bg-purple-100 text-purple-800'
   },
   {
-    id: 'cat-nursing',
-    name: 'Nursing',
-    bengaliName: 'নার্সিং ভর্তি ও ডিপ্লোমা কোর্স',
-    icon: 'HeartPulse',
-    count: 65,
-    gradient: 'from-rose-500 to-red-500',
+    id: 'cat-ielts',
+    name: 'IELTS',
+    bengaliName: 'আইইএলটিএস ও স্পোকেন ইংলিশ',
+    icon: 'IELTS',
+    count: 45,
+    gradient: 'from-rose-500 to-red-600',
     bgLight: 'bg-rose-50 border-rose-200 text-rose-900',
     textColor: 'text-rose-600',
     badgeColor: 'bg-rose-100 text-rose-800'
   },
   {
-    id: 'cat-arts',
-    name: 'Arts & Commerce',
-    bengaliName: 'মানবিক ও ব্যবসায় শিক্ষা বিভাগ',
-    icon: 'Palette',
-    count: 95,
-    gradient: 'from-teal-500 to-emerald-600',
-    bgLight: 'bg-teal-50 border-teal-200 text-teal-900',
-    textColor: 'text-teal-600',
-    badgeColor: 'bg-teal-100 text-teal-800'
+    id: 'cat-exam',
+    name: 'Exam',
+    bengaliName: 'মডেল টেস্ট ও এক্সাম ব্যাচ',
+    icon: 'ClipboardCheck',
+    count: 150,
+    gradient: 'from-emerald-500 to-teal-600',
+    bgLight: 'bg-emerald-50 border-emerald-200 text-emerald-900',
+    textColor: 'text-emerald-600',
+    badgeColor: 'bg-emerald-100 text-emerald-800'
   },
   {
     id: 'cat-free',
@@ -218,6 +218,38 @@ export const COURSES: Course[] = [
       { id: 'kb1', title: 'বাংলা ১ম ও ২য় পত্র (ব্যাকরণ, সাহিত্য ও বিরচন)', lecturesCount: 35, duration: '50 Hours', topics: ['বাংলা ধ্বনিতত্ত্ব ও ণ-ত্ব ষ-ত্ব', 'কারক ও সমাস', 'পাঠ্যবইয়ের গদ্য-পদ্য বিশ্লেষণ'] },
       { id: 'ke1', title: 'English Masterclass (Grammar, Vocabulary & Comprehension)', lecturesCount: 40, duration: '60 Hours', topics: ['Parts of Speech', 'Right Form of Verbs', 'Prepositions & Idioms', 'Written Paragraph Formulation'] },
       { id: 'kgk1', title: 'সাধারণ জ্ঞান (বাংলাদেশ ও আন্তর্জাতিক বিষয়াবলী + সাম্প্রতিক)', lecturesCount: 25, duration: '35 Hours', topics: ['বাংলাদেশের ইতিহাস ও মুক্তিযুদ্ধ', 'সংবিধান ও ভূগোল', 'আন্তর্জাতিক সংস্থা ও সাম্প্রতিক যুদ্ধ/সন্ধি'] }
+    ],
+    isPopular: true
+  },
+  {
+    id: 'mega-exam-batch-26',
+    title: 'HSC & Admission মেগা এক্সাম ব্যাচ ২০২৬',
+    subtitle: 'অধ্যায়ভিত্তিক কুইজ, উইকলি টেস্ট ও সেন্ট্রাল ফাইনাল মডেল টেস্ট (নেগেটিভ মার্কিং সহ)',
+    slug: 'mega-exam-batch-hsc-admission-2026',
+    category: 'Exam',
+    batchYear: 'HSC-26',
+    badge: 'ডেইলি ও উইকলি এক্সাম',
+    examCount: 150,
+    classCount: 30,
+    price: 1500,
+    originalPrice: 2500,
+    thumbnail: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=800&q=80',
+    rating: 4.9,
+    enrolledStudents: 14200,
+    mentors: [
+      { name: 'ড. জামান আহমেদ', title: 'Exam Controller & Mentor, BUET', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' },
+      { name: 'সাবরিনা জাহান', title: 'Evaluation Lead, DMC', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80' }
+    ],
+    description: 'এইচএসসি ও বিশ্ববিদ্যালয়ের প্রতিটি অধ্যায় শেষ করে নিজেকে যাচাই করার জন্য রিয়েল-টাইম ওএমআর ভিত্তিক মডেল টেস্ট ও সেন্ট্রাল মেরিট লিস্টের সেরা এক্সাম ব্যাচ।',
+    features: [
+      '১৫০+ চ্যাপ্টারওয়াইজ ও সাবজেক্ট ফাইনাল এক্সাম',
+      'নেগেটিভ মার্কিং ও অটো ওএমআর (OMR) রেজাল্ট',
+      'দেশসেরা শিক্ষার্থীদের সাথে সেন্ট্রাল মেধা তালিকা',
+      'প্রতিটি পরীক্ষার পূর্ণাঙ্গ সলভ শীট ও ভিডিও সল্যুশন'
+    ],
+    syllabus: [
+      { id: 'ex1', title: 'পেপার ফাইনাল ও সাবজেক্ট ফাইনাল এক্সাম', lecturesCount: 50, duration: 'Unlimited', topics: ['ফিজিক্স ১ম ও ২য় পত্র', 'কেমিস্ট্রি ১ম ও ২য় পত্র', 'ম্যাথ ও বায়োলজি'] },
+      { id: 'ex2', title: 'মেগা পূর্ণাঙ্গ মডেল টেস্ট (ভার্সিটি ও মেডিকেল স্ট্যান্ডার্ড)', lecturesCount: 50, duration: 'Unlimited', topics: ['বুয়েট স্ট্যান্ডার্ড রিটেন এক্সাম', 'মেডিকেল স্পিড টেস্ট', 'ঢাবি ও গুচ্ছ স্ট্যান্ডার্ড এক্সাম'] }
     ],
     isPopular: true
   },
@@ -313,6 +345,43 @@ export const COURSES: Course[] = [
       'প্রিন্টেড লেকচার শিট ও CQ সল্যুশন বুক'
     ],
     isPopular: false
+  },
+  {
+    id: 'ielts-masterclass-band-8',
+    title: 'IELTS Target Band 8.0 Live Masterclass',
+    subtitle: 'Listening, Reading, Writing, Speaking ও ক্যামব্রিজ টেস্টের ফুল প্রিপারেশন',
+    slug: 'ielts-target-band-8-live-masterclass',
+    category: 'IELTS',
+    batchYear: '2026 Batch',
+    badge: 'IELTS BAND 8.0',
+    examCount: 40,
+    classCount: 65,
+    price: 3500,
+    originalPrice: 6000,
+    thumbnail: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80',
+    rating: 4.95,
+    enrolledStudents: 6850,
+    mentors: [
+      { name: 'আরিফুল হক (Band 8.5)', title: 'Certified British Council Trainer', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' },
+      { name: 'নুসরাত জাহান (Band 8.0)', title: 'Speaking & Writing Specialist', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80' }
+    ],
+    description: 'উচ্চশিক্ষায় বিদেশ যাত্রা কিংবা ক্যারিয়ার গঠনে আইইএলটিএস-এ কাঙ্ক্ষিত ব্যান্ড ৮.০ নিশ্চিত করতে রিডিং শর্টকাট, লিসেনিং হ্যাকস, টাস্ক ১ ও ২ রাইটিং ইভ্যালুয়েশন এবং ওয়ান-অন-ওয়ান স্পিকিং টেস্ট মক ইন্টারভিউ।',
+    features: [
+      '৬৫+ লাইভ প্র্যাকটিক্যাল ক্লাস ও ক্যামব্রিজ ১৬-২০ সমাধান',
+      'প্রতিটি রাইটিং টাস্কের পারসোনালাইজড চেকিং ও ফিডব্যাক',
+      '২০+ ওয়ান-অন-ওয়ান রিয়েল স্পিকিং মক টেস্ট',
+      'স্পেশাল ব্যান্ড ৮.০ ভোকাবুলারি ব্যাংক ও আইডিয়া জেনারেশন পিডিএফ',
+      'ব্রিটিশ কাউন্সিল ও আইডিপি এক্সাম প্যাটার্ন অনুযায়ী ফুল টেস্ট'
+    ],
+    syllabus: [
+      { id: 'i1', title: 'IELTS Listening Masterclass', lecturesCount: 15, duration: '25 Hours', topics: ['Section 1-4 Analysis', 'Distractor Identification', 'Map & Diagram Labelling', 'Multiple Choice Strategy'] },
+      { id: 'i2', title: 'IELTS Reading Hack & Skimming Techniques', lecturesCount: 15, duration: '25 Hours', topics: ['True/False/Not Given Mastery', 'Heading Matching Fast Track', 'Keyword Paraphrasing', 'Time Management 60-min rule'] },
+      { id: 'i3', title: 'IELTS Writing Task 1 & Task 2 Blueprint', lecturesCount: 20, duration: '35 Hours', topics: ['Academic Graph/Chart Structure', 'Band 9 Vocabulary & Cohesion', 'Task 2 Essay Types & Arguments', 'Complex Sentence Formations'] },
+      { id: 'i4', title: 'IELTS Speaking Confidence & Fluency', lecturesCount: 15, duration: '20 Hours', topics: ['Part 1 Rapid Fluency', 'Part 2 Cue Card Strategy (PPF Method)', 'Part 3 Deep Discussion Analysis', 'Pronunciation & Idiomatic Phrases'] }
+    ],
+    videoPreviewUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+    isPopular: true,
+    isFeatured: true
   },
   {
     id: 'free-starter-pack',

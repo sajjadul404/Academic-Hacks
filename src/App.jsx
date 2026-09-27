@@ -33,6 +33,7 @@ export default function App() {
   const [faqs, setFaqs] = useState(() => dataStore.getFaqs());
   const [siteSettings, setSiteSettings] = useState(() => dataStore.getSettings());
   const [orders, setOrders] = useState(() => dataStore.getOrders());
+  const [coupons, setCoupons] = useState(() => dataStore.getCoupons());
 
   // Cart and user auth states
   const [cart, setCart] = useState(() => localStore.getCart());
@@ -115,6 +116,10 @@ export default function App() {
   useEffect(() => {
     dataStore.saveOrders(orders);
   }, [orders]);
+
+  useEffect(() => {
+    dataStore.saveCoupons(coupons);
+  }, [coupons]);
 
   // Sync cart to localStore
   useEffect(() => {
@@ -389,6 +394,7 @@ export default function App() {
             inCart={selectedCourse ? cartCourseIds.includes(selectedCourse.id) : false}
             onEnrollNow={handleEnrollNowDirect}
             onDirectPaymentSuccess={handleDirectPaymentSuccess}
+            siteSettings={siteSettings}
           />
         ) : (
           <>
@@ -468,6 +474,8 @@ export default function App() {
           setSiteSettings={setSiteSettings}
           orders={orders}
           setOrders={setOrders}
+          coupons={coupons}
+          setCoupons={setCoupons}
           showToast={showToast}
         />
       )}
@@ -477,6 +485,7 @@ export default function App() {
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
         cart={cart}
+        coupons={coupons}
         onRemoveItem={handleRemoveFromCart}
         onClearCart={handleClearCart}
         onCheckoutSuccess={handleCheckoutSuccess}

@@ -31,6 +31,7 @@ export const CourseShowcase = ({
   const categories = [
     { id: 'All', label: 'সকল কোর্স' },
     { id: 'Admission', label: 'Admission (HSC-26)' },
+    { id: 'IELTS', label: 'IELTS ও ভাষা' },
     { id: 'Exam', label: 'মডেল টেস্ট ও এক্সাম' },
     { id: 'Engineering', label: 'ইঞ্জিনিয়ারিং' },
     { id: 'Medical', label: 'মেডিকেল (DMC)' },

@@ -46,17 +46,67 @@ export const DEFAULT_STATS = [
 export const DEFAULT_SITE_SETTINGS = {
   brandName: 'Academic Hacks',
   brandTagline: 'শিক্ষার সহজ পথ',
-  noticeText: '',
-  isNoticeActive: false,
+  noticeText: '🔥 এইচএসসি ২৬ ও এডমিশন নতুন ব্যাচে মেগা ডিসকাউন্ট চলছে! সীমিত আসন বাকি।',
+  isNoticeActive: true,
+  noticeBarBg: 'from-rose-600 via-pink-600 to-amber-600',
   helpline: '০৯৬৩৮-০০০০০',
   helplineTime: 'সকাল ১০টা - রাত ১০টা',
   supportEmail: 'support@academichacks.edu.bd',
   whatsappNumber: '01700000000',
-  address: 'ঢাকা, বাংলাদেশ',
+  address: 'ফার্মগেট, ঢাকা, বাংলাদেশ',
   facebookUrl: 'https://facebook.com',
   youtubeUrl: 'https://youtube.com',
-  telegramUrl: 'https://telegram.org'
+  telegramUrl: 'https://telegram.org',
+
+  // Payment Gateways Settings
+  bkashNumber: '01700-123456',
+  bkashType: 'Send Money (Personal)',
+  isBkashActive: true,
+
+  nagadNumber: '01800-654321',
+  nagadType: 'Send Money (Personal)',
+  isNagadActive: true,
+
+  rocketNumber: '01900-112233',
+  rocketType: 'Send Money (Personal)',
+  isRocketActive: false,
+
+  paymentInstructions: 'প্রথমে আপনার বিকাশ বা নগদ অ্যাপ থেকে উল্লেখিত নম্বরে নির্ধারিত ফি সেন্ড মানি করুন। এরপর যে মোবাইল নম্বর থেকে টাকা পাঠিয়েছেন এবং প্রাপ্ত ট্রানজেকশন আইডি (TrxID) নিচে লিখে সাবমিট করুন।',
+
+  // SEO & Meta
+  metaTitle: 'Academic Hacks - বাংলাদেশের শীর্ষ এডমিশন ও একাডেমিক প্ল্যাটফর্ম',
+  metaDescription: 'এইচএসসি, বুয়েট, মেডিকেল ও ঢাবি সহ সকল বিশ্ববিদ্যালয়ের ভর্তি পরীক্ষার জন্য সেরা মেন্টরদের লাইভ ক্লাস ও এক্সাম।'
 };
+
+export const DEFAULT_COUPONS = [
+  {
+    id: 'c-1',
+    code: 'HACKS20',
+    discount: 20,
+    type: 'percent',
+    minAmount: 500,
+    isActive: true,
+    description: '২০% ফ্ল্যাট ডিসকাউন্ট'
+  },
+  {
+    id: 'c-2',
+    code: 'PROMO500',
+    discount: 500,
+    type: 'flat',
+    minAmount: 2000,
+    isActive: true,
+    description: '৫০০ টাকা ছাড়'
+  },
+  {
+    id: 'c-3',
+    code: 'HSC26',
+    discount: 15,
+    type: 'percent',
+    minAmount: 1000,
+    isActive: true,
+    description: 'এইচএসসি-২৬ স্পেশাল ছাড়'
+  }
+];
 
 const STORAGE_KEYS = {
   COURSES: 'academichacks_courses',
@@ -66,7 +116,8 @@ const STORAGE_KEYS = {
   TESTIMONIALS: 'academichacks_testimonials',
   FAQS: 'academichacks_faqs',
   SETTINGS: 'academichacks_site_settings',
-  ORDERS: 'academichacks_orders'
+  ORDERS: 'academichacks_orders',
+  COUPONS: 'academichacks_coupons'
 };
 
 export const dataStore = {
@@ -74,7 +125,21 @@ export const dataStore = {
   getCourses: () => {
     try {
       const stored = localStorage.getItem(STORAGE_KEYS.COURSES);
-      return stored ? JSON.parse(stored) : COURSES;
+      if (!stored) return COURSES;
+      const parsed = JSON.parse(stored);
+      if (!parsed.some((c) => c.id === 'mega-exam-batch-26')) {
+        const examCourse = COURSES.find((c) => c.id === 'mega-exam-batch-26');
+        if (examCourse) {
+          parsed.push(examCourse);
+        }
+      }
+      if (!parsed.some((c) => c.id === 'ielts-masterclass-band-8')) {
+        const ieltsCourse = COURSES.find((c) => c.id === 'ielts-masterclass-band-8');
+        if (ieltsCourse) {
+          parsed.push(ieltsCourse);
+        }
+      }
+      return parsed;
     } catch {
       return COURSES;
     }
@@ -108,7 +173,37 @@ export const dataStore = {
   getCategories: () => {
     try {
       const stored = localStorage.getItem(STORAGE_KEYS.CATEGORIES);
-      return stored ? JSON.parse(stored) : CATEGORIES;
+      if (!stored) return CATEGORIES;
+      const parsed = JSON.parse(stored);
+      return parsed.map((cat) => {
+        if (cat.id === 'cat-arts' || cat.name === 'Arts & Commerce') {
+          return {
+            id: 'cat-exam',
+            name: 'Exam',
+            bengaliName: 'মডেল টেস্ট ও এক্সাম ব্যাচ',
+            icon: 'ClipboardCheck',
+            count: 150,
+            gradient: 'from-emerald-500 to-teal-600',
+            bgLight: 'bg-emerald-50 border-emerald-200 text-emerald-900',
+            textColor: 'text-emerald-600',
+            badgeColor: 'bg-emerald-100 text-emerald-800'
+          };
+        }
+        if (cat.id === 'cat-nursing' || cat.name === 'Nursing' || cat.icon === 'HeartPulse') {
+          return {
+            id: 'cat-ielts',
+            name: 'IELTS',
+            bengaliName: 'আইইএলটিএস ও স্পোকেন ইংলিশ',
+            icon: 'IELTS',
+            count: 45,
+            gradient: 'from-rose-500 to-red-600',
+            bgLight: 'bg-rose-50 border-rose-200 text-rose-900',
+            textColor: 'text-rose-600',
+            badgeColor: 'bg-rose-100 text-rose-800'
+          };
+        }
+        return cat;
+      });
     } catch {
       return CATEGORIES;
     }
@@ -240,6 +335,23 @@ export const dataStore = {
     }
   },
 
+  // Coupons
+  getCoupons: () => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEYS.COUPONS);
+      return stored ? JSON.parse(stored) : DEFAULT_COUPONS;
+    } catch {
+      return DEFAULT_COUPONS;
+    }
+  },
+  saveCoupons: (coupons) => {
+    try {
+      localStorage.setItem(STORAGE_KEYS.COUPONS, JSON.stringify(coupons));
+    } catch (e) {
+      console.error('Error saving coupons:', e);
+    }
+  },
+
   // Reset all to defaults
   resetAll: () => {
     Object.values(STORAGE_KEYS).forEach(key => localStorage.removeItem(key));
@@ -248,7 +360,7 @@ export const dataStore = {
   // Export full site data as JSON
   exportAll: () => {
     return {
-      version: '1.0',
+      version: '2.0',
       exportedAt: new Date().toISOString(),
       courses: dataStore.getCourses(),
       spotlights: dataStore.getSpotlights(),
@@ -256,7 +368,9 @@ export const dataStore = {
       stats: dataStore.getStats(),
       testimonials: dataStore.getTestimonials(),
       faqs: dataStore.getFaqs(),
-      settings: dataStore.getSettings()
+      settings: dataStore.getSettings(),
+      coupons: dataStore.getCoupons(),
+      orders: dataStore.getOrders()
     };
   },
 
@@ -269,5 +383,7 @@ export const dataStore = {
     if (jsonData.testimonials) dataStore.saveTestimonials(jsonData.testimonials);
     if (jsonData.faqs) dataStore.saveFaqs(jsonData.faqs);
     if (jsonData.settings) dataStore.saveSettings(jsonData.settings);
+    if (jsonData.coupons) dataStore.saveCoupons(jsonData.coupons);
+    if (jsonData.orders) dataStore.saveOrders(jsonData.orders);
   }
 };

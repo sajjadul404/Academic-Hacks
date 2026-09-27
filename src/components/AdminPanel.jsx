@@ -25,8 +25,17 @@ import {
   Search,
   ExternalLink,
   ShieldCheck,
-  GraduationCap
+  GraduationCap,
+  CreditCard,
+  Tag,
+  Copy,
+  Check,
+  Filter
 } from 'lucide-react';
+import { BkashIcon, NagadIcon } from './PaymentLogos';
+import { PaymentSettingsTab } from './admin/PaymentSettingsTab';
+import { CouponsTab } from './admin/CouponsTab';
+import { OrdersTab } from './admin/OrdersTab';
 
 export const AdminPanel = ({
   isOpen = false,
@@ -46,10 +55,12 @@ export const AdminPanel = ({
   setSiteSettings,
   orders,
   setOrders,
+  coupons = [],
+  setCoupons,
   onClose,
   showToast
 }) => {
-  const [activeTab, setActiveTab] = useState('overview'); // overview, courses, spotlights, stats, settings, testimonials, orders, backup
+  const [activeTab, setActiveTab] = useState('overview'); // overview, courses, spotlights, stats, payments, orders, coupons, settings, testimonials, backup
 
   // Course modal state
   const [editingCourse, setEditingCourse] = useState(null);
@@ -310,7 +321,7 @@ export const AdminPanel = ({
   // ----------------------------------------------------------------
   const handleExportData = () => {
     const fullData = {
-      version: '1.0',
+      version: '2.0',
       exportedAt: new Date().toISOString(),
       courses,
       spotlights,
@@ -319,7 +330,8 @@ export const AdminPanel = ({
       testimonials,
       faqs,
       siteSettings,
-      orders
+      orders,
+      coupons
     };
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fullData, null, 2));
     const downloadAnchor = document.createElement('a');
@@ -345,6 +357,7 @@ export const AdminPanel = ({
         setLocalSettings(parsed.siteSettings);
       }
       if (parsed.orders) setOrders(parsed.orders);
+      if (parsed.coupons && setCoupons) setCoupons(parsed.coupons);
       setImportJsonText('');
       showToast('অভিনন্দন! ডেটা সফলভাবে ইম্পোর্ট করা হয়েছে!');
     } catch {
@@ -475,6 +488,57 @@ export const AdminPanel = ({
             </button>
 
             <button
+              onClick={() => setActiveTab('payments')}
+              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer text-left ${
+                activeTab === 'payments'
+                  ? 'bg-indigo-50 text-indigo-700 border border-indigo-100 shadow-sm'
+                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <CreditCard className="w-4 h-4" />
+                <span>বিকাশ ও নগদ পেমেন্ট</span>
+              </div>
+              <span className="px-1.5 py-0.5 text-[10px] bg-pink-100 text-pink-700 rounded-md font-bold">
+                গেটওয়ে
+              </span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('orders')}
+              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer text-left ${
+                activeTab === 'orders'
+                  ? 'bg-indigo-50 text-indigo-700 border border-indigo-100 shadow-sm'
+                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Users className="w-4 h-4" />
+                <span>এনরোলমেন্ট ও অর্ডার</span>
+              </div>
+              <span className="px-1.5 py-0.5 text-[10px] bg-emerald-100 text-emerald-800 rounded-md font-mono">
+                {orders.length}
+              </span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('coupons')}
+              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer text-left ${
+                activeTab === 'coupons'
+                  ? 'bg-indigo-50 text-indigo-700 border border-indigo-100 shadow-sm'
+                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Tag className="w-4 h-4" />
+                <span>কুপন ও ছাড় ভাউচার</span>
+              </div>
+              <span className="px-1.5 py-0.5 text-[10px] bg-amber-100 text-amber-800 rounded-md font-mono">
+                {coupons.length}
+              </span>
+            </button>
+
+            <button
               onClick={() => setActiveTab('stats')}
               className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer text-left ${
                 activeTab === 'stats'
@@ -515,23 +579,6 @@ export const AdminPanel = ({
             </button>
 
             <button
-              onClick={() => setActiveTab('orders')}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer text-left ${
-                activeTab === 'orders'
-                  ? 'bg-indigo-50 text-indigo-700 border border-indigo-100 shadow-sm'
-                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <Users className="w-4 h-4" />
-                <span>এনরোলমেন্ট ও অর্ডার</span>
-              </div>
-              <span className="px-1.5 py-0.5 text-[10px] bg-emerald-100 text-emerald-800 rounded-md font-mono">
-                {orders.length}
-              </span>
-            </button>
-
-            <button
               onClick={() => setActiveTab('backup')}
               className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer text-left ${
                 activeTab === 'backup'
@@ -563,10 +610,12 @@ export const AdminPanel = ({
               { id: 'overview', label: 'ওভারভিউ' },
               { id: 'courses', label: `কোর্স (${courses.length})` },
               { id: 'spotlights', label: `স্পটলাইট (${spotlights.length})` },
+              { id: 'payments', label: 'বিকাশ ও নগদ' },
+              { id: 'orders', label: `অর্ডার (${orders.length})` },
+              { id: 'coupons', label: `কুপন (${coupons.length})` },
               { id: 'stats', label: 'কাউন্টার' },
               { id: 'settings', label: 'সেটিংস' },
               { id: 'testimonials', label: 'রিভিউ' },
-              { id: 'orders', label: 'অর্ডার' },
               { id: 'backup', label: 'ব্যাকআপ' }
             ].map(tab => (
               <button
@@ -1396,76 +1445,40 @@ export const AdminPanel = ({
           )}
 
           {/* ============================================================== */}
-          {/* TAB 7: ORDERS & ENROLLMENT */}
+          {/* TAB: PAYMENT GATEWAY SETTINGS */}
+          {/* ============================================================== */}
+          {activeTab === 'payments' && (
+            <PaymentSettingsTab
+              siteSettings={localSettings}
+              setSiteSettings={(newSettings) => {
+                setLocalSettings(newSettings);
+                setSiteSettings(newSettings);
+              }}
+              showToast={showToast}
+            />
+          )}
+
+          {/* ============================================================== */}
+          {/* TAB: ORDERS & ENROLLMENT */}
           {/* ============================================================== */}
           {activeTab === 'orders' && (
-            <div className="space-y-6 max-w-6xl mx-auto">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 font-['Outfit',sans-serif]">
-                    এনরোলমেন্ট ও অর্ডার তালিকা ({orders.length})
-                  </h2>
-                  <p className="text-xs sm:text-sm text-slate-500">
-                    শিক্ষার্থীদের পেমেন্ট, কোর্সে অন্তর্ভুক্তি ও লেনদেন হিসাব
-                  </p>
-                </div>
-                <div className="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-3.5 py-1.5 rounded-xl">
-                  মোট সংগৃহীত: ৳ {totalRevenue.toLocaleString()}
-                </div>
-              </div>
+            <OrdersTab
+              orders={orders}
+              setOrders={setOrders}
+              courses={courses}
+              showToast={showToast}
+            />
+          )}
 
-              <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs">
-                    <thead className="bg-slate-50 text-slate-500 font-semibold border-b border-slate-100">
-                      <tr>
-                        <th className="py-3 px-4">অর্ডার আইডি</th>
-                        <th className="py-3 px-4">শিক্ষার্থী</th>
-                        <th className="py-3 px-4">কোর্স</th>
-                        <th className="py-3 px-4">মূল্য</th>
-                        <th className="py-3 px-4">পেমেন্ট মেথড</th>
-                        <th className="py-3 px-4">স্ট্যাটাস</th>
-                        <th className="py-3 px-4">তারিখ</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100">
-                      {orders.map(order => (
-                        <tr key={order.id} className="hover:bg-slate-50/70 transition-colors">
-                          <td className="py-3 px-4 font-mono font-bold text-indigo-700">
-                            {order.id}
-                          </td>
-                          <td className="py-3 px-4">
-                            <p className="font-bold text-slate-900">{order.studentName}</p>
-                            <p className="text-[11px] text-slate-500">{order.studentPhone}</p>
-                          </td>
-                          <td className="py-3 px-4 font-medium text-slate-800">
-                            {order.courseTitle}
-                          </td>
-                          <td className="py-3 px-4 font-bold text-slate-900">
-                            ৳ {order.amount}
-                          </td>
-                          <td className="py-3 px-4">
-                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-pink-50 text-pink-700 border border-pink-100">
-                              {order.paymentMethod || 'bKash'}
-                            </span>
-                          </td>
-                          <td className="py-3 px-4">
-                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center gap-1 w-fit">
-                              <CheckCircle className="w-2.5 h-2.5" />
-                              <span>{order.status}</span>
-                            </span>
-                          </td>
-                          <td className="py-3 px-4 text-slate-500 font-mono text-[11px]">
-                            {order.date}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-            </div>
+          {/* ============================================================== */}
+          {/* TAB: COUPONS & DISCOUNTS */}
+          {/* ============================================================== */}
+          {activeTab === 'coupons' && (
+            <CouponsTab
+              coupons={coupons}
+              setCoupons={setCoupons}
+              showToast={showToast}
+            />
           )}
 
           {/* ============================================================== */}
@@ -1622,12 +1635,13 @@ export const AdminPanel = ({
                     className="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 font-semibold"
                   >
                     <option value="Admission">Admission</option>
+                    <option value="IELTS">IELTS (আইইএলটিএস)</option>
+                    <option value="Exam">Exam (মডেল টেস্ট)</option>
                     <option value="HSC">HSC</option>
                     <option value="School">School</option>
                     <option value="Engineering">Engineering</option>
                     <option value="Medical">Medical</option>
                     <option value="Arts & Commerce">Arts & Commerce</option>
-                    <option value="Nursing">Nursing</option>
                     <option value="Free Course">Free Course</option>
                   </select>
                 </div>

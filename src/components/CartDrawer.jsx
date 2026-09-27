@@ -18,7 +18,8 @@ export const CartDrawer = ({
   cart = [],
   onRemoveItem,
   onClearCart,
-  onCheckoutSuccess
+  onCheckoutSuccess,
+  coupons = []
 }) => {
   const [couponCode, setCouponCode] = useState('');
   const [appliedDiscount, setAppliedDiscount] = useState(0);
@@ -36,13 +37,27 @@ export const CartDrawer = ({
   const handleApplyCoupon = (e) => {
     e.preventDefault();
     setCouponError('');
-    const code = couponCode.toUpperCase();
-    if (code === 'HACKS20' || code === 'EDUPATH20' || code === 'DISCOUNT20') {
+    const code = couponCode.trim().toUpperCase();
+    if (!code) return;
+
+    const matched = coupons.find(c => c.code.toUpperCase() === code && c.isActive);
+    if (matched) {
+      if (matched.minAmount && rawTotal < matched.minAmount) {
+        setCouponError(`এই কুপন ব্যবহারের জন্য কার্টে সর্বনিম্ন ৳${matched.minAmount} টাকার কোর্স থাকতে হবে`);
+        return;
+      }
+      if (matched.type === 'percent') {
+        setAppliedDiscount(matched.discount);
+      } else {
+        const percentEquiv = rawTotal > 0 ? Math.min(100, Math.round((matched.discount / rawTotal) * 100)) : 0;
+        setAppliedDiscount(percentEquiv);
+      }
+    } else if (code === 'HACKS20' || code === 'EDUPATH20' || code === 'DISCOUNT20') {
       setAppliedDiscount(20);
     } else if (code === 'FREE100') {
       setAppliedDiscount(100);
     } else {
-      setCouponError('অবৈধ কুপন কোড! ট্রাই করুন: HACKS20');
+      setCouponError('অবৈধ বা মেয়াদোত্তীর্ণ কুপন কোড! ট্রাই করুন: HACKS20');
     }
   };
 

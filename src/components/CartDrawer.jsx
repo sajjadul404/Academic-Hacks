@@ -217,24 +217,23 @@ export const CartDrawer = ({
                     <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-2">
                       পেমেন্ট মাধ্যম বেছে নিন:
                     </label>
-                    <div className="grid grid-cols-4 gap-2">
+                    <div className="grid grid-cols-2 gap-2.5">
                       {[
-                        { id: 'bkash', name: 'bKash', color: 'border-pink-500 text-pink-600 bg-pink-50' },
-                        { id: 'nagad', name: 'Nagad', color: 'border-orange-500 text-orange-600 bg-orange-50' },
-                        { id: 'rocket', name: 'Rocket', color: 'border-purple-500 text-purple-600 bg-purple-50' },
-                        { id: 'card', name: 'Card', color: 'border-blue-500 text-blue-600 bg-blue-50' },
+                        { id: 'bkash', name: 'বিকাশ (bKash)', logo: '/bkash.png', color: 'border-[#E2136E] text-[#E2136E] bg-pink-50/60' },
+                        { id: 'nagad', name: 'নগদ (Nagad)', logo: '/nagad.png', color: 'border-[#EA1D25] text-[#EA1D25] bg-orange-50/60' },
                       ].map((item) => (
                         <button
                           key={item.id}
                           type="button"
                           onClick={() => setSelectedPayment(item.id)}
-                          className={`py-2 px-1 text-center rounded-xl border text-xs font-black transition-all ${
+                          className={`py-2 px-2 flex items-center justify-center gap-2 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
                             selectedPayment === item.id 
                               ? item.color + ' ring-2 ring-indigo-500/20 shadow-sm' 
-                              : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                              : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
                           }`}
                         >
-                          {item.name}
+                          <img src={item.logo} alt={item.name} className="w-5 h-5 rounded-md object-contain" />
+                          <span>{item.name}</span>
                         </button>
                       ))}
                     </div>

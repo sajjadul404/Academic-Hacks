@@ -11,6 +11,7 @@ import {
   MapPin,
   ShieldCheck
 } from 'lucide-react';
+import { BkashIcon, NagadIcon } from './PaymentLogos';
 
 export const Footer = ({ onNavigateSection, onOpenAdmin, siteSettings = null, isAdmin = false }) => {
   const brandTitle = siteSettings?.brandName || 'Academic Hacks';
@@ -182,11 +183,24 @@ export const Footer = ({ onNavigateSection, onOpenAdmin, siteSettings = null, is
             {/* Verified Payment Badges */}
             <div>
               <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">নিরাপদ পেমেন্ট পার্টনার:</p>
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="px-2.5 py-1 rounded-lg bg-pink-100 text-pink-700 font-black text-xs border border-pink-200">bKash</span>
-                <span className="px-2.5 py-1 rounded-lg bg-orange-100 text-orange-700 font-black text-xs border border-orange-200">Nagad</span>
-                <span className="px-2.5 py-1 rounded-lg bg-purple-100 text-purple-700 font-black text-xs border border-purple-200">Rocket</span>
-                <span className="px-2.5 py-1 rounded-lg bg-blue-100 text-blue-700 font-black text-xs border border-blue-200">VISA / Master</span>
+              <div className="flex items-center gap-2.5 flex-wrap">
+                {/* bKash Official Logo */}
+                <div 
+                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white border border-pink-200/90 shadow-2xs hover:shadow-xs hover:border-[#E2136E]/60 transition-all cursor-default"
+                  title="বিকাশ (bKash)"
+                >
+                  <BkashIcon className="w-5 h-5 rounded-md shadow-2xs" />
+                  <span className="text-xs font-black text-[#E2136E] font-['Outfit',sans-serif]">bKash</span>
+                </div>
+
+                {/* Nagad Official Logo */}
+                <div 
+                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white border border-orange-200/90 shadow-2xs hover:shadow-xs hover:border-[#EA1D25]/60 transition-all cursor-default"
+                  title="নগদ (Nagad)"
+                >
+                  <NagadIcon className="w-5 h-5 rounded-md shadow-2xs" />
+                  <span className="text-xs font-black text-[#EA1D25] font-['Outfit',sans-serif]">Nagad</span>
+                </div>
               </div>
             </div>
 
